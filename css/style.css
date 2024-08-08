@@ -38,7 +38,7 @@ a:hover {
     text-decoration: underline;
 }
 
-input[type="submit"] {
+input[type="submit"], button {
     display: inline-block;
     background-color: #f8f9fa;
     border: 1px solid #f8f9fa;
@@ -54,16 +54,33 @@ input[type="submit"] {
     user-select: none;
 }
 
-input[type="submit"]:hover {
+input[type="submit"]:hover, button:hover {
     /* box-shadow: 0 1px 1px rgba(0, 0, 0, .1); */
     background-color: #f8f9fa;
     border: 1px solid #dadce0;
     color: #202124;
 }
 
-input[type="submit"]:focus {
+input[type="submit"]:focus, button:focus {
     border: 1px solid #4285f4;
     outline: none;
+}
+
+.button {
+    position: relative;
+}
+.button > img {
+    height: 25px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.loading {
+    display: none;
 }
 
 input[type="text"] {

@@ -41,8 +41,10 @@
             <div class="playground">
                 <form>
                     <textarea placeholder="Type your code here ..." class="code" rows="1"/>(print "hello world")</textarea>
-                    <div></div>
-                    <input type="submit" class="run" value="Run code" />
+                    <div class="button" style="float: right;">
+                        <input type="submit" class="run" value="Run code" />
+                        <img class="loading" src="../images/loading.gif">
+                    </div>
                 </form>
                 <div class="result">
                     <pre></pre>
@@ -54,8 +56,10 @@
             <div class="playground">
                 <form>
                     <textarea placeholder="Type your code here ..." class="code" rows="1"/>(+ 1 2 3 4 5)</textarea>
-                    <div></div>
-                    <input type="submit" class="run" value="Run code" />
+                    <div class="button" style="float: right;">
+                        <input type="submit" class="run" value="Run code" />
+                        <img class="loading" src="../images/loading.gif">
+                    </div>
                 </form>
                 <div class="result">
                     <pre></pre>
@@ -75,8 +79,10 @@
 (inc 2)
 
 (inc (inc 2))</textarea>
-                    <div></div>
-                    <input type="submit" class="run" value="Run code" />
+                    <div class="button" style="float: right;">
+                        <input type="submit" class="run" value="Run code" />
+                        <img class="loading" src="../images/loading.gif">
+                    </div>
                 </form>
                 <div class="result">
                     <pre></pre>
@@ -103,8 +109,10 @@
 (type (quote a))
 
 (type '(1 2 3 4))</textarea>
-                    <div></div>
-                    <input type="submit" class="run" value="Run code" />
+                    <div class="button" style="float: right;">
+                        <input type="submit" class="run" value="Run code" />
+                        <img class="loading" src="../images/loading.gif">
+                    </div>
                 </form>
                 <div class="result">
                     <pre></pre>
@@ -132,6 +140,8 @@
                 let form = playground.getElementsByTagName("form")[0];
                 // Find submit button to run the code
                 let button = form.getElementsByClassName("run")[0];
+                // Find the loading image
+                let loading = form.getElementsByClassName("loading")[0];
                 // Find the run button for the playground
                 let code = form.getElementsByClassName("code")[0];
                 // Find the result div for the playground
@@ -141,6 +151,9 @@
                 }
                 button.onclick = function(event) {
                     event.preventDefault();
+                    button.disabled = true;
+                    button.value = "";
+                    loading.style.display = "block";
                     fetch(`https://fsp-playground.francismcnamee.com/run`, {
 					method: "post",
 					body: JSON.stringify({ code: code.value}),
@@ -156,6 +169,9 @@
 				})
 				.then(function(data) {
 					result.style.display = "inline-block";
+                    button.disabled = false;
+                    button.value = "Run code";
+                    loading.style.display = "none";
 					if (Object.hasOwn(data, 'msg')) {
 						result.getElementsByTagName("pre")[0].innerText = data.msg;
 					}
@@ -163,6 +179,9 @@
 				.catch(function(error) {
 					return error.json()
 						.then(function(error) {
+                            button.disabled = false;
+                            button.value = "Run code";
+                            loading.style.display = "none";
 							result.style.display = "inline-block";
 							result.getElementsByTagName("pre")[0].innerText = `${error.error}`;
 						})
