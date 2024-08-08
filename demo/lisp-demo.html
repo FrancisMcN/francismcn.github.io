@@ -131,6 +131,24 @@
 				<strong>ie.francis.lisp.type.Cons</strong>
 			</code> -->
 		</div>
+        <div class="codeBlock">
+			<span>Implementing the Fibonacci function and calculating fibonacci(20)</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="4"/>(func fib (n) 
+    (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
+
+(fib 20)</textarea>
+                    <div class="button" style="float: right;">
+                        <input type="submit" class="run" value="Run code" />
+                        <img class="loading" src="../images/loading.gif">
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
         <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
 		<script type="text/javascript">
 
