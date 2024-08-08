@@ -10,6 +10,7 @@
 	</head>
     <body class="demoBody">
         <h1 class="text-center" style="margin: 0px">IP Address Country Finder</h1>
+        <hr />
         <div class="ipLookupFormContainer">
             <p>You can enter any IP address into the textbox. To get started try clicking one of the blue example IP addresses below.</p>
             <ul class="exampleIpList">
@@ -26,11 +27,12 @@
                 </center>
             </form>
             <div id="ipData" style="display: block;">
-                <p id="ipOutput"><div style="opacity: 0;" class="ipResponse"><strong>8.8.4.4</strong> is from <br /><span class="flag">&#127482;&#127480;</span></div></p>
+                <p id="ipOutput"></p>
                 <!-- <p id="ipOutput">&nbsp;</p> -->
             </div>
         </div>
         <script src="../js/script.js"></script>
+        <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
 		<script type="text/javascript">			
 			var form=document.getElementById("ipLookupForm");
 			// Call function when form is submitted

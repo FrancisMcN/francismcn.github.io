@@ -1,0 +1,55 @@
+.playground {
+    width: 100%;
+}
+.playground textarea {
+    border: none;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    padding: 5px 10px;
+    resize: none;
+    /* height: 2em; */
+    min-height: 2em;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+.playground textarea:focus {
+    /* border: 1px solid #555555; */
+    background-color: #f8f8f8;
+    outline: none;
+}
+
+.playground input[type="submit"] {
+    float: right;
+}
+
+.playground > .result {
+    display: block;
+    width: 100%;
+    color: #FFF;
+    background-color: #525252;
+    max-width: 900px;
+}
+
+.playground pre {
+    padding: 0px 10px;
+    font-weight: normal;
+}
+
+.codeBlock {
+    width: 100%;
+    min-width: 900px;
+}
+
+.codeBlock > span {
+    background-color: #ffffff;
+    font-style: italic;
+    width: 100%;
+    display: inline-block;
+    padding: 5px 0px;
+}
+.codeBlock > code {
+    padding: 0px 0px;
+    line-height: 1.4;
+}
