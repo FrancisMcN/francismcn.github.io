@@ -78,7 +78,14 @@
 			  </div>
 		</div>
 		<script src="./js/script.js"></script>
+		<script src="./js/iframe-resizer/iframe-resizer.parent.js" defer></script>
 		<script type="text/javascript">			
+			window.onload = function () {
+				iframeResize({
+				license: 'GPLv3',
+				waitForLoad: true,
+			}, '#iFrameForDemos' );
+
 			var form=document.getElementById("ipLookupForm");
 			// Call function when form is submitted
 			form.addEventListener('submit', sendIpRequest);
@@ -112,6 +119,8 @@
 					modal.style.display = "none";
 				}
 			}
+		}
+			
 		</script>
 	</body>
 </html>

@@ -38,6 +38,51 @@ a:hover {
     text-decoration: underline;
 }
 
+input[type="submit"] {
+    display: inline-block;
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    color: #3c4043;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+input[type="submit"]:hover {
+    /* box-shadow: 0 1px 1px rgba(0, 0, 0, .1); */
+    background-color: #f8f9fa;
+    border: 1px solid #dadce0;
+    color: #202124;
+}
+
+input[type="submit"]:focus {
+    border: 1px solid #4285f4;
+    outline: none;
+}
+
+input[type="text"] {
+    width: 100%;
+    border: 1px solid #CCC;
+    padding: 5px 10px;
+    font-size: 18px;
+}
+
+input[type="text"]:hover {
+    border: 1px solid #ababab;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border: 1px solid #3d3d3d;
+    outline: none;
+}
+
 .text-center {
     text-align: center;
 }
@@ -77,17 +122,16 @@ a:hover {
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: hidden; /* Disable scrolling 
-    background-color: rgb(0,0,0); /* Fallback color */
+    overflow: auto; /* Disable scrolling */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 .demo-content {
     background-color: #fefefe;
-    margin: 10% auto; /* 15% from the top and centered */
+    margin: 5% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 1000px; /* Could be more or less, depending on screen size */
 }
 
 .close {
@@ -117,4 +161,5 @@ a:hover {
 
 #iFrameForDemos {
     width: 100%;
+    height: 100vh;
 }
