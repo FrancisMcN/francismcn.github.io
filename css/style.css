@@ -198,6 +198,7 @@ input[type="text"]:focus {
     width: 100%;
     padding: 0px 20px;
     box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
 .container p {

@@ -98,6 +98,7 @@
 				link.onclick = function(event) {
 					event.preventDefault();
 					modal.style.display = "block";
+					document.getElementsByTagName("body")[0].style.overflow = "hidden";
 					document.getElementById('iFrameForDemos').src = link.href;
 				}
 			}
@@ -109,6 +110,7 @@
 			span.onclick = function() {
 				document.getElementById('iFrameForDemos').src = "about:blank";
 				modal.style.display = "none";
+				document.getElementsByTagName("body")[0].style.overflow = "auto";
 			}
 
 			// When the user clicks anywhere outside of the modal, close it
@@ -116,6 +118,7 @@
 				if (event.target == modal) {
 					document.getElementById('iFrameForDemos').src = "about:blank";
 					modal.style.display = "none";
+					document.getElementsByTagName("body")[0].style.overflow = "auto";
 				}
 			}
 		}
