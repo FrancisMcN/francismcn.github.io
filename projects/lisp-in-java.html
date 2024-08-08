@@ -1,0 +1,150 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+		<title>Lisp in Java - Francis McNamee</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="../css/style.css">
+	</head>
+	<body>
+		<div class="header">
+			<a href="/test"><- Back to homepage</a>
+		</div>
+		<h1>A Custom Lisp Dialect Written in Java</h1>
+		<hr />
+		<h2>Project Highlights</h2>
+		<ul>
+			<li>Compiles to fast Java Bytecode using the ASM library</li>
+		</ul>
+		<hr />
+		<h2>Overview</h2>
+		<hr />
+		<h2>Playground</h2>
+		<form id="fspPlayground">
+			<textarea placeholder="Type your code here ..." id="fspCode" /></textarea>
+			<div></div>
+			<input type="submit" value="Run code" />
+		</form>
+		<div id="codeResult">
+			<pre id="result"></pre>
+		</div>
+		<hr />
+		<h2>Example Code</h2>
+		<div class="codeBlock">
+			<span>Printing 'hello world' in the REPL. The print function returns nothing so the REPL returns nil after printing.</span>
+			<code>
+				> (print "hello world")<br />
+				<strong>hello world</strong><br />
+				<strong>nil</strong><br />
+			</code>
+		</div>
+		<div class="codeBlock">
+			<span>Calling the builtin addition function.</span>
+			<code>
+				> (+ 1 2 3 4 5)<br />
+				<strong>15</strong>
+			</code>
+		</div>
+		<div class="codeBlock">
+			<span>Creating a lambda (nameless function), assigning it to a symbol named 'inc' and calling the new 'inc' function.</span>
+			<code>
+				> (def inc (lambda (x) (+ x 1)))<br />
+				> (inc 2)<br />
+				<strong>3</strong><br />
+				> (inc (inc 2))<br />
+				<strong>4</strong><br />
+			</code>
+		</div>
+		<div class="codeBlock">
+			<span>Using the builtin 'type' function showing primitive types and custom Lisp-specific ones such as Cons and Symbol.</span>
+			<code>
+				> (type 123)<br />
+				<strong>java.lang.Integer</strong><br />
+				> (type "hello world")<br />
+				<strong>java.lang.String</strong><br />
+				> (type 1.23)<br />
+				<strong>java.lang.Float</strong><br />
+				> (type (quote a))<br />
+				<strong>ie.francis.lisp.type.Symbol</strong><br />
+				> (type (quote (1 2 3 4)))<br />
+				<strong>ie.francis.lisp.type.Cons</strong>
+			</code>
+		</div>
+		<style>
+			.header {
+				background-color: #9ddbff;
+				border-bottom: 1px solid #61a3ff;
+				width: 100%;
+				/* height: 20px; */
+				padding: 5px 0px;
+			}
+			code {
+				background-color: #f1f1f1;
+				display: inline-block;
+				width: 100%;
+			}
+			#fspCode {
+				width: 400px;
+				height: 250px;
+			}
+			.codeBlock > span {
+				background-color: #ffffff;
+				border-bottom: 1px solid #e1e1e1;
+				font-style: italic;
+				width: 100%;
+				display: inline-block;
+				padding: 5px 0px;
+			}
+			.codeBlock > code {
+				padding: 0px 0px;
+				line-height: 1.4;
+			}
+		</style>
+		<script type="text/javascript">
+
+			var form=document.getElementById("fspPlayground");
+			function sendIpRequest(event){
+				// Prevent default behaviour and page refresh
+				event.preventDefault();
+				
+				let code = document.getElementById("fspCode").value
+				console.log(JSON.stringify({ code: code}))
+				fetch(`https://fsp-playground.francismcnamee.com/run`, {
+					method: "post",
+					body: JSON.stringify({ code: code}),
+					headers: {
+					    "Content-Type": "application/json",
+  					},
+				})
+				.then(function(response) {
+					if (!response.ok) {
+						return Promise.reject(response)
+					}
+						return response.json();
+				})
+				.then(function(data) {
+					document.getElementById("codeResult").style.display = "inline-block";
+					if (Object.hasOwn(data, 'msg')) {
+						document.getElementById("result").innerText = data.msg;
+					}
+				})
+				.catch(function(error) {
+					return error.json()
+						.then(function(error) {
+							document.getElementById("codeResult").style.display = "inline-block";
+							document.getElementById("result").innerText = `${error.error}`;
+						})
+				})
+			}
+
+			// Call function when form is submitted
+			form.addEventListener('submit', sendIpRequest);
+		</script>
+		<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+		<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/perl/perl.min.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/abbott.min.css"></link>
+	</body>
+</html>

@@ -1,0 +1,117 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+		<title>Francis McNamee's Portfolio</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="./css/style.css">
+		<script type="text/javascript">
+			function resizeIframe(obj) {
+				obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+			}
+		</script>
+	</head>
+	<body>
+		<div class="content">
+			<h1 class="text-center">Francis McNamee</h1>
+			<h2>About Me</h2>
+			<p>I am a high-performing software developer with a particular interest in the JVM and compilers. While working for IBM I gained experience developing microservices in Java and deploying them to Kubernetes clusters.</p>
+			<p>I have also successfully produced multiple patent applications, some of which are shown below.</p>
+			<p>I'm enjoy learning by developing personal projects for fun. Some of my favourite projects are highlighted below.</p>
+			<ul>
+				<li>Lisp interpreter written in Java <a href="./demo/lisp-demo.html" class="demo-link">Click here for a demo</a></li>
+				<li>IP Geolocation API written in Go <a href="./demo/geolocation-demo.html" class="demo-link">Click here for a demo</a></li>
+				<li>ARM64 Assembler written in Java which generates Mach-O object files</li>
+			</ul>
+			<p>When I'm not programming I'm working on my private pilot's license and I enjoy running half-marathons.</p>
+			<h2>Work Experience</h2>
+			<p>
+				<div class="company_logo"><img src = "./images/ibm-logo.svg" alt="IBM"/></div>
+				<span class="job_role">Software Developer</span>
+				<span class="job_date">2020 - Present</span>
+			</p>
+			<ul>
+				<li>Recognised within the top 2% of IBM's technical contributors globally in 2022</li>
+				<li>Developed microservices in Java and deployed them to production Kubernetes clusters</li>
+				<li>Proven ability to deal with pressure, changing requirements and short deadlines</li>
+				<li>Significant leadership experience gained through mentoring of junior developers and giving them feedback</li>
+			</ul>
+			<hr />
+			<h2>Patent Applications</h2>
+			<ul>
+				<li>Compressible Blockchains <a href="https://patents.google.com/patent/US20230179424A1">https://patents.google.com/patent/US20230179424A1</a></li>
+				<li>Representing container images in an image registry <a href="https://patents.google.com/patent/US20240086370A1">https://patents.google.com/patent/US20240086370A1</a></li>
+			</ul>
+			<hr />
+			<h2>My Personal Projects</h2>
+			<h3>IP Geolocation API Written in Go</h3>
+			<p>
+				<a href="https://github.com/FrancisMcN/ipi-api">https://github.com/FrancisMcN/ipi-api</a><br />
+				<a href="https://github.com/FrancisMcN/ipi-pipeline">https://github.com/FrancisMcN/ipi-pipeline</a><br />
+				<a href="https://github.com/FrancisMcN/lib-mmdb">https://github.com/FrancisMcN/lib-mmdb</a><br />
+			</p>
+			</ul>
+			<form id="ipLookupForm">
+				<input type="text" placeholder="8.8.4.4" id="ipToLookup" />
+				<input type="submit" value="Lookup IP" />
+			</form>
+			<div id="ipData">
+				<p id="ipOutput"></p>
+			</div>
+			<hr />
+			<h3>A Custom Lisp Dialect Written in Java</h3>
+			<p>
+				<a href="https://github.com/FrancisMcN/fsp">https://github.com/FrancisMcN/fsp</a>
+			</p>
+			<p><a href="/projects/lisp-in-java">Find out more here</a></p>
+			<hr />
+			<h3>An Assembler for ARM64 Written in Java</h3>
+			<p>
+				<a href="https://github.com/FrancisMcN/assembler">https://github.com/FrancisMcN/assembler</a>
+			</p>
+		</div>
+		<div id="demo">
+			<div class="demo-content">
+				<span class="close">&times;</span>
+				<iframe id="iFrameForDemos" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
+			  </div>
+		</div>
+		<script src="./js/script.js"></script>
+		<script type="text/javascript">			
+			var form=document.getElementById("ipLookupForm");
+			// Call function when form is submitted
+			form.addEventListener('submit', sendIpRequest);
+
+			// Get the modal
+			var modal = document.getElementById("demo");
+
+			var demoLinks = document.getElementsByClassName("demo-link");
+			for (let link of demoLinks) {
+				// When the user clicks on the button, open the modal
+				link.onclick = function(event) {
+					event.preventDefault();
+					modal.style.display = "block";
+					document.getElementById('iFrameForDemos').src = link.href;
+				}
+			}
+
+			// Get the <span> element that closes the modal
+			var span = document.getElementsByClassName("close")[0];
+
+			// When the user clicks on <span> (x), close the modal
+			span.onclick = function() {
+				document.getElementById('iFrameForDemos').src = "about:blank";
+				modal.style.display = "none";
+			}
+
+			// When the user clicks anywhere outside of the modal, close it
+			window.onclick = function(event) {
+				if (event.target == modal) {
+					document.getElementById('iFrameForDemos').src = "about:blank";
+					modal.style.display = "none";
+				}
+			}
+		</script>
+	</body>
+</html>

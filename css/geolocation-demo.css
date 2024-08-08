@@ -1,0 +1,93 @@
+.ipLookupFormContainer {
+    /* width: 400px; */
+    /* background-color: #f5f5f5; */
+    /* border: 1px solid #CCC; */
+    background-color: #FFF;
+    border: none;
+    padding: 10px 10px;
+}
+
+.ipLookupText {
+    width: 100%;
+    border: 1px solid #CCC;
+    padding: 5px 10px;
+    font-size: 18px;
+}
+
+.ipLookupText:hover {
+    border: 1px solid #ababab;
+    outline: none;
+}
+
+.ipLookupText:focus {
+    border: 1px solid #3d3d3d;
+    outline: none;
+}
+
+.ipLookupButton {
+    display: inline-block;
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    color: #3c4043;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ipLookupButton:hover {
+    /* box-shadow: 0 1px 1px rgba(0, 0, 0, .1); */
+    background-color: #f8f9fa;
+    border: 1px solid #dadce0;
+    color: #202124;
+}
+
+.ipLookupButton:focus {
+    border: 1px solid #4285f4;
+    outline: none;
+}
+
+.ipResponse {
+    background-color: #f4f4f4;
+    display: block;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.flag {
+    font-size: 32px;
+}
+
+.exampleIpList {
+    list-style-type: none;
+    margin: 0 auto 10;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.exampleIpList li a {
+    display: block;
+    color: rgb(10, 118, 195);
+    background-color: #e4eeff;
+    text-align: center;
+    padding: 5px;
+    margin: 0 5px 5px 0;
+    text-decoration: none;
+}
+
+.exampleIpList li a:hover {
+    background-color: #d8e5fb;
+    text-decoration: underline;
+}
+
+.exampleIpList li a:active {
+    background-color: #c1d5f8;
+}
