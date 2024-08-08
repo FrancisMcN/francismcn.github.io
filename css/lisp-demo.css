@@ -12,6 +12,7 @@
     width: 100%;
     overflow: hidden;
     background-color: #f1f1f1;
+    line-height: 1.4;
 }
 
 .playground textarea:focus {
