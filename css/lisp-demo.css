@@ -21,10 +21,6 @@
     outline: none;
 }
 
-.playground input[type="submit"] {
-    float: right;
-}
-
 .playground > .result {
     display: block;
     width: 100%;
