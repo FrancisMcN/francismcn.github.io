@@ -1,6 +1,7 @@
 <html>
 	<head>
-		<meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+		<!-- <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" /> -->
+        <meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>Geolocation Demo</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -9,31 +10,36 @@
         <link rel="stylesheet" href="../css/geolocation-demo.css">
 	</head>
     <body class="demoBody">
-        <h1 class="text-center" style="margin: 0px">IP Address Country Finder</h1>
-        <hr />
-        <div class="ipLookupFormContainer">
-            <p>You can enter any IP address into the textbox. To get started try clicking one of the blue example IP addresses below.</p>
-            <ul class="exampleIpList">
-                <li><a href="#">8.8.4.4</a></li>
-                <li><a href="#">1.1.1.1</a></li>
-                <li><a href="#">175.45.176.0</a></li>
-                <li><a href="#">77.72.75.172</a></li>
-                <li><a href="#">2001:67c:2d20::</a></li>
-            </ul>
-            <form id="ipLookupForm">
-                <input type="text" class="ipLookupText" autocomplete="off" placeholder="8.8.4.4" id="ipToLookup" />
-                <center>
-                    <input type="submit" id="ipLookupButton" class="ipLookupButton" value="Lookup IP" />
-                </center>
-            </form>
-            <div id="ipData" style="display: block;">
-                <p id="ipOutput"></p>
-                <!-- <p id="ipOutput">&nbsp;</p> -->
+        <div class="container">
+            <h1 class="text-center demo-title">IP Address Country Finder</h1>
+            <hr />
+            <div class="ipLookupFormContainer">
+                <p class="text-center">You can enter any IP address into the textbox. To get started try clicking one of the blue example IP addresses below.</p>
+                <ul class="exampleIpList">
+                    <li><a href="#">8.8.4.4</a></li>
+                    <li><a href="#">1.1.1.1</a></li>
+                    <li><a href="#">175.45.176.0</a></li>
+                    <li class="break"><a href="#">77.72.75.172</a></li>
+                    <li><a href="#">2001:67c:2d20::</a></li>
+                </ul>
+                <form id="ipLookupForm">
+                    <input type="text" class="ipLookupText" autocomplete="off" placeholder="8.8.4.4" id="ipToLookup" />
+                    <center>
+                        <div class="button">
+                            <input type="submit" id="ipLookupButton" class="ipLookupButton" value="Lookup IP" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </center>
+                </form>
+                <div id="ipData" style="display: block;">
+                    <div id="ipOutput"></div>
+                    <!-- <p id="ipOutput">&nbsp;</p> -->
+                </div>
             </div>
         </div>
         <script src="../js/script.js"></script>
         <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
-		<script type="text/javascript">			
+		<script type="text/javascript">	
 			var form=document.getElementById("ipLookupForm");
 			// Call function when form is submitted
 			form.addEventListener('submit', sendIpRequest);

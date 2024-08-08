@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Geolocation Demo - Francis McNamee</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/geolocation-demo.css">
+    </head>
+    <body>
+        <div class="iframe-container">
+            <h1 class="text-center demo-title">IP Address Country Finder</h1>
+            <hr>
+            <p class="text-center">You can enter any IP address into the textbox. To get started try clicking one of the blue example IP addresses below.</p>
+            <ul class="exampleIpList">
+                <li><a href="#">8.8.4.4</a></li>
+                <li><a href="#">1.1.1.1</a></li>
+                <li><a href="#">175.45.176.0</a></li>
+                <li><a href="#">77.72.75.172</a></li>
+                <li><a href="#">2001:67c:2d20::</a></li>
+            </ul>
+            <div class="form-container">
+            <form id="ipLookupForm">
+                <input type="text" class="ipLookupText" autocomplete="off" placeholder="8.8.4.4" id="ipToLookup" />
+                <center>
+                    <div class="button">
+                        <input type="submit" id="ipLookupButton" class="ipLookupButton" value="Lookup IP" />
+                        <img class="loading" src="../images/loading2.gif">
+                    </div>
+                </center>
+                </form>
+                <div id="ipData" style="display: block;">
+                    <div id="ipOutput"></div>
+                </div>
+            </div>
+        </div>
+        <script src="../js/script.js"></script>
+        <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
+		<script type="text/javascript">	
+			var form=document.getElementById("ipLookupForm");
+			// Call function when form is submitted
+			form.addEventListener('submit', sendIpRequest);
+
+            var ipList = document.getElementsByClassName("exampleIpList")[0];
+            for (let item of ipList.children) {
+                let link = item.children[0];
+                link.onclick = function(event) {
+					event.preventDefault();
+                    document.getElementById("ipToLookup").value = link.innerHTML;
+                    document.getElementById("ipLookupButton").click();
+				}
+            }
+        </script>
+    </body>
+</html>

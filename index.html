@@ -1,6 +1,7 @@
 <html>
 	<head>
-		<meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+		<!-- <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" /> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Francis McNamee's Portfolio</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +21,8 @@
 			<p>I have also successfully produced multiple patent applications, some of which are shown below.</p>
 			<p>I'm enjoy learning by developing personal projects for fun. Some of my favourite projects are highlighted below.</p>
 			<ul>
-				<li>Lisp interpreter written in Java <a href="./demo/lisp-demo.html" class="demo-link">Click here for a demo</a></li>
-				<li>IP Geolocation API written in Go <a href="./demo/geolocation-demo.html" class="demo-link">Click here for a demo</a></li>
+				<li>Lisp interpreter written in Java <a href="./demo/lisp-demo2.html" class="demo-link">Click here for a demo</a></li>
+				<li>IP Geolocation API written in Go <a href="./demo/geolocation-demo2.html" class="demo-link">Click here for a demo</a></li>
 				<li>ARM64 Assembler written in Java which generates Mach-O object files</li>
 			</ul>
 			<p>When I'm not programming I'm working on my private pilot's license and I enjoy running half-marathons.</p>
@@ -40,11 +41,11 @@
 			<hr />
 			<h2>Patent Applications</h2>
 			<ul>
-				<li>Compressible Blockchains <a href="https://patents.google.com/patent/US20230179424A1">https://patents.google.com/patent/US20230179424A1</a></li>
-				<li>Representing container images in an image registry <a href="https://patents.google.com/patent/US20240086370A1">https://patents.google.com/patent/US20240086370A1</a></li>
+				<li style="word-break: break-all">Compressible Blockchains <a href="https://patents.google.com/patent/US20230179424A1">https://patents.google.com/patent/US20230179424A1</a></li>
+				<li style="word-break: break-all">Representing container images in an image registry <a href="https://patents.google.com/patent/US20240086370A1">https://patents.google.com/patent/US20240086370A1</a></li>
 			</ul>
 			<hr />
-			<h2>My Personal Projects</h2>
+			<!-- <h2>My Personal Projects</h2>
 			<h3>IP Geolocation API Written in Go</h3>
 			<p>
 				<a href="https://github.com/FrancisMcN/ipi-api">https://github.com/FrancisMcN/ipi-api</a><br />
@@ -69,12 +70,14 @@
 			<h3>An Assembler for ARM64 Written in Java</h3>
 			<p>
 				<a href="https://github.com/FrancisMcN/assembler">https://github.com/FrancisMcN/assembler</a>
-			</p>
+			</p> -->
 		</div>
 		<div id="demo">
 			<div class="demo-content">
-				<span class="close">&times;</span>
-				<iframe id="iFrameForDemos" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
+				<div class="container">
+					<span class="close">&times;</span>
+					<iframe id="iFrameForDemos" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
+				</div>
 			  </div>
 		</div>
 		<script src="./js/script.js"></script>
@@ -86,10 +89,6 @@
 				waitForLoad: true,
 			}, '#iFrameForDemos' );
 
-			var form=document.getElementById("ipLookupForm");
-			// Call function when form is submitted
-			form.addEventListener('submit', sendIpRequest);
-
 			// Get the modal
 			var modal = document.getElementById("demo");
 
@@ -99,6 +98,7 @@
 				link.onclick = function(event) {
 					event.preventDefault();
 					modal.style.display = "block";
+					document.getElementsByTagName("body")[0].style.overflow = "hidden";
 					document.getElementById('iFrameForDemos').src = link.href;
 				}
 			}
@@ -110,6 +110,7 @@
 			span.onclick = function() {
 				document.getElementById('iFrameForDemos').src = "about:blank";
 				modal.style.display = "none";
+				document.getElementsByTagName("body")[0].style.overflow = "auto";
 			}
 
 			// When the user clicks anywhere outside of the modal, close it
@@ -117,6 +118,7 @@
 				if (event.target == modal) {
 					document.getElementById('iFrameForDemos').src = "about:blank";
 					modal.style.display = "none";
+					document.getElementsByTagName("body")[0].style.overflow = "auto";
 				}
 			}
 		}

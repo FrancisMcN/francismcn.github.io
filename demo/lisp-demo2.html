@@ -1,35 +1,23 @@
 <html>
-	<head>
-		<meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
-		<title>Lisp in Java - Francis McNamee</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="../css/style.css">
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Lisp Compiler in Java - Francis McNamee</title>
+        <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="../css/lisp-demo.css">
-	</head>
-	<body>
-		<h1 class="text-center" style="margin: 0px">A Custom Lisp Dialect Written in Java</h1>
-		<hr />
-		<h2>Project Highlights</h2>
+    </head>
+    <body>
+        <div class="iframe-container">
+            <h1 class="text-center demo-title">Handwritten Lisp Compiler in Java</h1>
+            <hr>
+            <h2>Project Highlights</h2>
 		<ul>
 			<li>Compiles to fast Java Bytecode using the ASM library</li>
 		</ul>
-		<hr />
+        <hr />
 		<h2>Overview</h2>
 		<hr />
 		<h2>Playground</h2>
-		<!-- <div class="playground">
-            <form>
-                <textarea placeholder="Type your code here ..." class="code" rows="1"/>(print "hello world")</textarea>
-                <div></div>
-                <input type="submit" class="run" value="Run code" />
-            </form>
-            <div class="result">
-                <pre></pre>
-            </div>
-        </div> -->
-		<hr />
+        <hr />
 		<h2>Example Code</h2>
 		<div class="codeBlock">
 			<span>Printing 'hello world' in the REPL. The print function returns nothing so the REPL returns nil after printing.</span>
@@ -149,6 +137,7 @@
                 </div>
             </div>
 		</div>
+        </div>
         <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
 		<script type="text/javascript">
 
@@ -208,5 +197,5 @@
 
             }
 		</script>
-	</body>
+    </body>
 </html>
