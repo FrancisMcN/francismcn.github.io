@@ -13,6 +13,7 @@
     overflow: hidden;
     background-color: #f1f1f1;
     line-height: 1.4;
+    font-size: 14px;
 }
 
 .playground textarea:focus {
@@ -22,21 +23,25 @@
 }
 
 .playground > .result {
-    display: block;
+    display: none;
     width: 100%;
     color: #FFF;
     background-color: #525252;
-    max-width: 900px;
+}
+
+.playground .timing {
+    margin: 19px 0px;
+    float: left;
 }
 
 .playground pre {
     padding: 0px 10px;
     font-weight: normal;
+    width: 100%;
 }
 
 .codeBlock {
     width: 100%;
-    min-width: 900px;
 }
 
 .codeBlock > span {
