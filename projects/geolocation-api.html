@@ -2,6 +2,9 @@
     <head>
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Geolocation Demo - Francis McNamee</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="../css/geolocation-demo.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/foundation.min.css">
@@ -59,8 +62,21 @@ db.Insert(cidr, myMap)</code></pre>
 <div class="writeup-reference">
     <p>The above example shows how to add an IPv6 block to the database and associate a map with it.</p>
 </div>
+<h3>How MMDB Files Work</h3>
+<p>I would summarise MMDB files by saying they are a binary format for representing trie data structures.</p>
+<p>Tries are also known as prefix trees because they are very efficient at finding keys sharing a particular prefix, the search time only depends on the length of the prefix. Searching for a prefix in a trie is an O(N) operation where N is the length of the prefix. Each row in the Internet Routing Table is an IP prefix and it's for this reason Internet Routing Tables are normally implemented using tries.</p>
+<p>An MMDB file at its core is just a serialised trie where each node is some geolocation data for a particular IP prefix.</p>
 <h3>Re-Creating the Database Every Day</h3>
-<p>The next important aspect of this project is called the IP Intelligence Pipeline. It takes all of the IP data and Geofeeds in their various forms and produces the MMDB database file. The RIRs all publish their data in slightly different formats which added some complexity to the IP Intelligence Pipeline.</p>
+<p>The next important aspect of this project is called the IP Intelligence Pipeline. It takes all of the IP data and Geofeeds in their various forms and produces the MMDB database file. The RIRs all publish their data in slightly different formats which added some complexity to the IP Intelligence Pipeline. You can find the source code for the IP Intelligence Pipeline on my GitHub here <a href="https://github.com/FrancisMcN/ipi-pipeline">https://github.com/FrancisMcN/ipi-pipeline</a></p>
+<p>Each pipeline stage is shown in the diagram below.</p>
+<div class="writeup-reference">
+    <img src="/images/geolocation-api/pipeline-stages.png" alt="IP Intelligence Pipeline stages to generate the MMDB file">
+    <p>The stages the IP Intelligence Pipeline goes through to generate an MMDB file every day.</p>
+</div>
+<h3>Serving the MMDB Database Using My API</h3>
+<p></p>
+
+
             </div>
         </div>
         <script src="../js/script.js"></script>

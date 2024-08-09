@@ -14,7 +14,7 @@
     white-space: pre;
     background-color: #f1f1f1;
     line-height: 1.4;
-    font-size: 14px;
+    font-size: 1rem;
 }
 
 .playground textarea:focus {
@@ -41,6 +41,7 @@
     font-weight: normal;
     width: 100%;
     box-sizing: border-box;
+    max-width: 100%;
 }
 
 .codeBlock {

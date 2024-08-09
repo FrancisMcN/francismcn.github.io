@@ -2,11 +2,14 @@
     <head>
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Lisp Compiler in Java - Francis McNamee</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="../css/lisp-demo.css">
     </head>
     <body>
-        <div class="iframe-container">
+        <div class="iframe-container" data-iframe-size>
             <h1 class="text-center demo-title">Handwritten Lisp Compiler in Java</h1>
             <hr>
             <h2>Project Highlights</h2>
@@ -29,9 +32,11 @@
             <div class="playground">
                 <form>
                     <textarea placeholder="Type your code here ..." class="code" rows="1"/>(print "hello world")</textarea>
-                    <div class="button" style="float: right;">
-                        <input type="submit" class="run" value="Run code" />
-                        <img class="loading" src="../images/loading2.gif">
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
                     </div>
                 </form>
                 <div class="result">
@@ -44,9 +49,11 @@
             <div class="playground">
                 <form>
                     <textarea placeholder="Type your code here ..." class="code" rows="1"/>(+ 1 2 3 4 5)</textarea>
-                    <div class="button" style="float: right;">
-                        <input type="submit" class="run" value="Run code" />
-                        <img class="loading" src="../images/loading2.gif">
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
                     </div>
                 </form>
                 <div class="result">
@@ -67,9 +74,11 @@
 (inc 2)
 
 (inc (inc 2))</textarea>
-                    <div class="button" style="float: right;">
-                        <input type="submit" class="run" value="Run code" />
-                        <img class="loading" src="../images/loading2.gif">
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
                     </div>
                 </form>
                 <div class="result">
@@ -97,9 +106,11 @@
 (type (quote a))
 
 (type '(1 2 3 4))</textarea>
-                    <div class="button" style="float: right;">
-                        <input type="submit" class="run" value="Run code" />
-                        <img class="loading" src="../images/loading2.gif">
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
                     </div>
                 </form>
                 <div class="result">
@@ -127,9 +138,11 @@
     (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
 
 (fib 20)</textarea>
-                    <div class="button" style="float: right;">
-                        <input type="submit" class="run" value="Run code" />
-                        <img class="loading" src="../images/loading2.gif">
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
                     </div>
                 </form>
                 <div class="result">
