@@ -1,17 +1,16 @@
 <html>
 	<head>
-		<!-- <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" /> -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Francis McNamee's Portfolio</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="./css/style.css">
-		<script type="text/javascript">
+		<script>
 			function resizeIframe(obj) {
-				obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+			  obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
 			}
-		</script>
+		  </script>
 	</head>
 	<body>
 		<div class="content">
@@ -21,8 +20,8 @@
 			<p>I have also successfully produced multiple patent applications, some of which are shown below.</p>
 			<p>I'm enjoy learning by developing personal projects for fun. Some of my favourite projects are highlighted below.</p>
 			<ul>
-				<li>Lisp interpreter written in Java <a href="./demo/lisp-demo2.html" class="demo-link">Click here for a demo</a></li>
-				<li>IP Geolocation API written in Go <a href="./demo/geolocation-demo2.html" class="demo-link">Click here for a demo</a></li>
+				<li>Lisp interpreter written in Java <a href="/demo/lisp-demo.html" class="demo-link">Click here for a demo</a></li>
+				<li>IP Geolocation API written in Go <a href="/demo/geolocation-api-demo.html" class="demo-link">Click here for a demo</a></li>
 				<li>ARM64 Assembler written in Java which generates Mach-O object files</li>
 			</ul>
 			<p>When I'm not programming I'm working on my private pilot's license and I enjoy running half-marathons.</p>
@@ -76,7 +75,7 @@
 			<div class="demo-content">
 				<div class="container">
 					<span class="close">&times;</span>
-					<iframe id="iFrameForDemos" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
+					<iframe id="iFrameForDemos" frameborder="0" scrolling="no"></iframe>
 				</div>
 			  </div>
 		</div>
