@@ -10,7 +10,8 @@
     /* height: 2em; */
     min-height: 2em;
     width: 100%;
-    overflow: hidden;
+    overflow-wrap: normal;
+    white-space: pre;
     background-color: #f1f1f1;
     line-height: 1.4;
     font-size: 14px;
@@ -35,9 +36,11 @@
 }
 
 .playground pre {
-    padding: 0px 10px;
+    padding: 10px 10px;
+    overflow-x: auto;
     font-weight: normal;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .codeBlock {
