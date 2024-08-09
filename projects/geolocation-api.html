@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Geolocation Demo - Francis McNamee</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/geolocation-demo.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/foundation.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </head>
+    <body>
+        <div class="iframe-container" data-iframe-size>
+            <h1 class="text-center demo-title">How I Made It - Francis' Geolocation API</h1>
+            <hr>
+            <p class="text-center"><a href="/demo/geolocation-api-demo.html">Click here to go back to the demo</a></p>
+            <h2>Project Highlights</h2>
+            <ul>
+                <li>Everything was written by me from scratch</li>
+                <li>Sourced IP geolocation data from each Regional Internet Registry directly (RIPE, ARIN etc ...)</li>
+                <li>Wrote a custom library to parse and generate MMDB files</li>
+                <li>Learned about the Trie data structure</li>
+                <li>Learned about the usefulness of Geofeeds</li>
+            </ul>
+            <h2>How It Works</h2>
+            <h3>Sourcing the Data</h3>
+            <p>The most important part of my API is the data it serves. The Regional Internet Registries (RIRs) actually publish IP Geolocation data every 24 hours in the form of a text file. I have a GitHub Actions pipeline which runs every 24 hours to retrieve the latest IP data from each RIR.</p>
+            <p>To improve the accuracy of the data it's important to supplement the data from the RIRs with data from other primary sources. I use several public Geofeeds for this purpose. Geofeeds are comma-separated value files containing IP ranges and location information. Geofeeds were first proposed by Google in 2013.</p>
+            <div class="writeup-reference">
+                <img src="/images/geolocation-api/github-pipeline.png" alt="GitHub pipeline for IP Geolocation">
+                <p>Screenshot of my GitHub Action which re-generates my IP geolocation database every 24 hours</p>
+            </div>
+            <h3>Writing My Own MMDB Library for Go</h3>
+            <p>For the database I chose to use the MMDB file format, this format is widely used throughout the IP geolocation industry and chosing it represented an opportunity to learn a new binary file format.</p>
+            <p>Shortly after beginning this project I discovered there was no suitable MMDB library written in Go, the reference implementation for parsing MMDB files is written in Perl.</p>
+            <p>I therefore decided to write my own library for parsing and generating MMDB files, I used the MMDB file format reference as my guide. You can find the reference here <a href="https://maxmind.github.io/MaxMind-DB/">https://maxmind.github.io/MaxMind-DB/</a></p>
+            <p>After a substantial amount of work I successfully finished my library. It's called <a href="https://github.com/FrancisMcN/lib-mmdb/">lib-mmdb</a>, you can find it on my GitHub. </p>
+            <p>My library is very easy to use. You can generate a new MMDB file in just a few lines of Go code.</p>
+            <pre><code class="language-go">db := mmdb.NewMMDB()
+_, cidr, err := net.ParseCIDR("1.0.1.0/24")
+if err != nil {
+    panic("invalid CIDR")
+}
+db.Insert(cidr, field.String("CN"))
+db.Finalise()
+db.Bytes() // The output of db.Bytes() can be written to disk as a .mmdb file</code></pre>
+<div class="writeup-reference">
+    <p>The above sample code shows how to create an MMDB object, add an IP block and serialise it using my Go MMDB library.</p>
+</div>
+<p>An interesting property of MMDB files is you can store lots of different data types inside the database. In the previous example I associated a single IP block with a string but my MMDB library supports all MMDB data types, the data type that's most commonly used is map.</p>
+<pre><code class="language-go">myMap := field.NewMap()
+myMap.Put(field.String("country"), field.String("GB"))
+myMap.Put(field.String("city"), field.String("London"))
+_, cidr, err := net.ParseCIDR("2001:67c:2d20::/48")
+if err != nil {
+    panic("invalid CIDR")
+}
+db.Insert(cidr, myMap)</code></pre>
+<div class="writeup-reference">
+    <p>The above example shows how to add an IPv6 block to the database and associate a map with it.</p>
+</div>
+<h3>Re-Creating the Database Every Day</h3>
+<p>The next important aspect of this project is called the IP Intelligence Pipeline. It takes all of the IP data and Geofeeds in their various forms and produces the MMDB database file. The RIRs all publish their data in slightly different formats which added some complexity to the IP Intelligence Pipeline.</p>
+            </div>
+        </div>
+        <script src="../js/script.js"></script>
+        <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
+    </body>
+</html>
