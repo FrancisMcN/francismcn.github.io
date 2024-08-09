@@ -99,6 +99,10 @@ db.Insert(cidr, myMap)</code></pre>
 </div>
 <h3>Building the UI</h3>
 <p>To make the API easier to use, I created a simple UI which can be found on the previous page. My API returns the ISO 3166-1 alpha-2 country code of each country, rather than the country's full name, mainly to reduce the size of the generated MMDB files.</p>
+<div class="writeup-reference">
+    <img src="/images/geolocation-api/api-ui.png" alt="Geolocation API's UI">
+    <p>The UI to access my geolocation API</p>
+</div>
 <p>In my demo I used the Intl.DisplayNames Javascript API to convert each country code into the country's actual name. Unfortunately, that API isn't compatible with all browsers, therefore I pre-calculated the country names ahead of time and hard-coded them to maximise browser compatibility. The code to map country codes to country names is shown below.</p>
 <pre><code language="language-javascript">function generateCountries() {
     // Generate country names
