@@ -137,6 +137,43 @@ input[type="text"]:focus {
     font-weight: bold;
 }
 
+.project-container {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(auto, 100%));
+    grid-gap: 20px;
+    justify-content: center;
+    margin: 20px;
+  }
+
+/* .project-container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    align-content: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+} */
+.flex-direction{
+    flex-direction:row;
+}
+
+.project-square {
+    /* display: inline-flex;
+    flex-wrap: nowrap; */
+    border: 1px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+    /* flex-direction: column; */
+    /* align-items: center;
+    justify-content: center; */
+    text-align: center;
+}
+
+.project-square h1 {
+    font-size: 1rem;
+}
+
 #ipData {
     display: none;
     margin-bottom: 10px;
@@ -237,7 +274,9 @@ input[type="text"]:focus {
 
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-
+    .project-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
     .writeup-reference {
         max-width:768px;
     }
@@ -255,6 +294,9 @@ input[type="text"]:focus {
 
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
+    .project-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
     .writeup-reference {
         max-width:992px;
     }
@@ -272,6 +314,9 @@ input[type="text"]:focus {
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) { 
+    .project-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
     .writeup-reference {
         max-width:800px;
     }
