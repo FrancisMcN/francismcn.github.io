@@ -12,23 +12,16 @@
         <div class="iframe-container" data-iframe-size>
             <h1 class="text-center demo-title">Handwritten Lisp Compiler in Java</h1>
             <hr>
-            <h2>Project Highlights</h2>
-		<ul>
-			<li>Compiles to fast Java Bytecode using the ASM library</li>
-		</ul>
-        <hr />
-		<h2>Overview</h2>
-		<hr />
-		<h2>Playground</h2>
-        <hr />
+            <p class="text-center"><a href="/projects/lisp-in-java.html">Click here to find out how I made this project</a></p>
+            <h2>Introduction</h2>
+            <p>I have a keen interest in compilers, programming languages and the Java Virtual Machine (JVM) in particular. Here I present my own implementation of the Lisp programming language, written completely from scratch in Java. Please read my writeup linked at the top of this page to learn the details of how I implemented my compiler.</p>
+            <p>Perhaps the most interesting aspect of my implementation is the fact my compiler compiles Lisp code directly to JVM bytecode meaning my Lisp can, in theory, reach Java-like levels of performance.</p>
+            <p>What follows are example programs written in my dialect of Lisp. You can run them in your browser by clicking the 'Run code' button. I encourage you to play with the examples and customise them.</p>
+            <p>When you click 'Run code' each program will be sent to a server which will call my compiler, compile your code, execute it in an instance of the JVM and send the result back to your browser.</p>
+            <p>Each example which follows demonstrates one feature of my Lisp implementation.</p>
 		<h2>Example Code</h2>
 		<div class="codeBlock">
-			<span>Printing 'hello world' in the REPL. The print function returns nothing so the REPL returns nil after printing.</span>
-			<!-- <code>
-				> (print "hello world")<br />
-				<strong>hello world</strong><br />
-				<strong>nil</strong><br />
-			</code> -->
+            <span>The first step in learning any programming language is printing 'Hello World' to the screen. Below shows how to do it in my version of Lisp.</span>
             <div class="playground">
                 <form>
                     <textarea placeholder="Type your code here ..." class="code" rows="1"/>(print "hello world")</textarea>
@@ -45,7 +38,7 @@
             </div>
 		</div>
 		<div class="codeBlock">
-			<span>Calling the builtin addition function.</span>
+			<span>This example shows how to add numbers together. Lisp is unusual compared to most languages because prefix rather than infix notation is used.</span>
             <div class="playground">
                 <form>
                     <textarea placeholder="Type your code here ..." class="code" rows="1"/>(+ 1 2 3 4 5)</textarea>
@@ -60,84 +53,12 @@
                     <pre></pre>
                 </div>
             </div>
-			<!-- <code>
-				> (+ 1 2 3 4 5)<br />
-				<strong>15</strong>
-			</code> -->
-		</div>
-		<div class="codeBlock">
-			<span>Creating a lambda (nameless function), assigning it to a symbol named 'inc' and calling the new 'inc' function.</span>
-            <div class="playground">
-                <form>
-                    <textarea placeholder="Type your code here ..." class="code" rows="5"/>(def inc (lambda (x) (+ x 1)))
-
-(inc 2)
-
-(inc (inc 2))</textarea>
-                    <div class="align-right">
-                        <div class="button">
-                            <input type="submit" class="run" value="Run code" />
-                            <img class="loading" src="../images/loading2.gif">
-                        </div>
-                    </div>
-                </form>
-                <div class="result">
-                    <pre></pre>
-                </div>
-            </div>
-			<!-- <code>
-				> (def inc (lambda (x) (+ x 1)))<br />
-				> (inc 2)<br />
-				<strong>3</strong><br />
-				> (inc (inc 2))<br />
-				<strong>4</strong><br />
-			</code> -->
-		</div>
-		<div class="codeBlock">
-			<span>Using the builtin 'type' function showing primitive types and custom Lisp-specific ones such as Cons and Symbol.</span>
-            <div class="playground">
-                <form>
-                    <textarea placeholder="Type your code here ..." class="code" rows="9"/>(type 123)
-
-(type "hello world")
-
-(type 1.23)
-
-(type (quote a))
-
-(type '(1 2 3 4))</textarea>
-                    <div class="align-right">
-                        <div class="button">
-                            <input type="submit" class="run" value="Run code" />
-                            <img class="loading" src="../images/loading2.gif">
-                        </div>
-                    </div>
-                </form>
-                <div class="result">
-                    <pre></pre>
-                </div>
-            </div>
-			<!-- <code>
-				> (type 123)<br />
-				<strong>java.lang.Integer</strong><br />
-				> (type "hello world")<br />
-				<strong>java.lang.String</strong><br />
-				> (type 1.23)<br />
-				<strong>java.lang.Float</strong><br />
-				> (type (quote a))<br />
-				<strong>ie.francis.lisp.type.Symbol</strong><br />
-				> (type (quote (1 2 3 4)))<br />
-				<strong>ie.francis.lisp.type.Cons</strong>
-			</code> -->
 		</div>
         <div class="codeBlock">
-			<span>Implementing the Fibonacci function and calculating fibonacci(20)</span>
+			<span>My Lisp supports comments, like most languages. You can create a single-line comment using the semicolon character.</span>
             <div class="playground">
                 <form>
-                    <textarea placeholder="Type your code here ..." class="code" rows="4"/>(func fib (n) 
-    (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
-
-(fib 20)</textarea>
+                    <textarea placeholder="Type your code here ..." class="code" rows="1"/>; This is a comment, when you run this code nothing will happen</textarea>
                     <div class="align-right">
                         <div class="button">
                             <input type="submit" class="run" value="Run code" />
@@ -150,6 +71,227 @@
                 </div>
             </div>
 		</div>
+        <div class="codeBlock">
+			<span>Almost everything in Lisp is a list. A list is anything surrounded by parentheses.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="9"/>; The two lines below are both lists, although some lists are special.
+; Lisp expects the first item in every list to be a function 
+; or a special keyword like 'print', 'if', 'def' etc ...
+;
+; Special lists are called 'special forms' and follow different
+; rules when they're evaluated.
+
+(+ 1 2 3)
+(print "hello")</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>The 'quote' special form is important in Lisp. It returns its argument, unevaluated. A surprisingly important and useful property in Lisp code.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="10"/>; The first list evaluates to 6, the second list evaluates 
+; to itself because of the quote special form
+
+(print (+ 1 2 3))
+(print (quote (1 2 3)))
+
+; quote is so commonly used that it has a
+; shorthand using the single-quote character
+; '(1 2 3) and (quote (1 2 3)) are identical
+(print '(1 2 3))</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>My Lisp supports comparisons between values to see if they are equal using the '=' function.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="2"/>(print (= 1 1))
+(print (= 1 2))</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>My Lisp also supports the 'if' special form, meaning code branching is possible.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="5"/>; Only the second branch of the 'if' will be executed
+
+(if (= 1 2) 
+    (print "incorrect") 
+    (print "correct 1 does not equal 2"))</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>Variables are supported too. You can use the 'def' special form to create a variable. In the next example I create two variables, print their values and add them together.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="5"/>(def x 100)
+(def y 250)
+(print x)
+(print y)
+(+ x y)</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>Almost everything in Lisp is a list, specifically a linked list. You can move through lists using the builtin functions 'car' and 'cdr'. 'car' and 'cdr' are traditional Lisp functions, 'car' means return the head of the list and 'cdr' means return the tail of the list.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="8"/>; This line will print 1
+(print (car '(1 2 3 4 5 6)))
+
+; This line will print (2 3 4 5 6)
+(print (cdr '(1 2 3 4 5 6))) 
+
+; You can even chain calls to 'cdr' together to print (4 5 6)
+(print (cdr (cdr (cdr '(1 2 3 4 5 6)))))</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>One of the best parts of Lisp are its macros. Lisp macros make it possible for a program to rewrite itself. We can use a macro to add support for infix notation to Lisp. This example shows how to create a macro which will rewrite an infix mathematical expression to the prefix notation Lisp requires.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="7"/>(def infix 
+    (macro (expr) 
+        (list (car (cdr expr)) (car expr) (car (cdr (cdr expr))))))
+
+; Normally this notation would fail but the infix
+; macro makes it possible
+(infix (2 + 3))</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>My Lisp supports user-defined functions using the builtin 'func' macro, an implementation of the Fibonacci function is shown below.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="6"/>(func fib (n) 
+    (if (< n 2) 
+        n 
+        (+ (fib (- n 1)) (fib (- n 2)))))
+
+(fib 10)</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>My Lisp also supports defining functions within the list where they're used. This is done using the 'lambda' special form.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="1"/>((lambda (x) (+ x 1)) 100)</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <div class="codeBlock">
+			<span>Like many Lisps and functional languages, looping is possible using tail recursion.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="6"/>(func loop (x) 
+    (do (print x) 
+        (if (> x 0) 
+            (loop (- x 1)))))
+
+(loop 10)</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="result">
+                    <pre></pre>
+                </div>
+            </div>
+		</div>
+        <p>Thank you for reading about my Lisp implementation, I hope you enjoyed playing with the example code. If you would like to learn more please <a href="/projects/lisp-in-java.html">read my writeup here</a>.</p>
+        <p>You can find all of the source code for my Lisp implementation on my GitHub here <a href="https://github.com/FrancisMcN/fsp" target="_blank">https://github.com/FrancisMcN/fsp</a></p>
         </div>
         <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
 		<script type="text/javascript">
