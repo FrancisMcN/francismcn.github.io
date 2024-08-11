@@ -26,7 +26,138 @@
 				<li>Only external library is ASM, a popular Java library for generating Java Virtual Machine (JVM) bytecode</li>
             </ul>
             <h2>How It Works</h2>
-            
+            <p>All compilers primarily do three things; scanning, parsing and code generation. I will therefore begin by explaining the design of my compiler's scanner.</p>
+            <h3>What Is a Scanner?</h3>
+            <p>Scanners, also known as tokenisers, break a stream of text into objects known as tokens. Scanners are the first stage of any compiler.</p>
+            <p>A token is a piece of the input text after some additional context has been added, this additional context is required by the parser later on. I have included an example below to clarify things.</p>
+            <p>Consider the following input text, it arrives at the scanner as nothing more than a sequence of characters.</p>
+            <pre><code>(+ 100 200 300)</code></pre>
+            <p>The scanner consumes this input, one character at a time and produces tokens. The first token will be the opening paranthese, the fact this first token is a single character is just a coincidence, tokens are often longer than a single character.</p>
+            <p>The second token will be the + symbol, the third token will be the number 100, the fourth token will be the number 200 and so on. Whitespace is sometimes important to scanners and sometimes it isn't, that just depends on the language you're scanning. Whitespace is not significant in Lisp so it is ignored by my scanner.</p>
+            <p>The complete set of tokens for the previous input string will look similar to the following.</p>
+            <pre><code>Token{type=LPAREN, value="("},
+Token{type=SYMBOL, value="+"},
+Token{type=NUMBER, value="100"},
+Token{type=NUMBER, value="200"},
+Token{type=NUMBER, value="300"},
+Token{type=RPAREN, value=")"}</code></pre>
+        <h3>The Design of My Scanner</h3>
+        <p>My scanner is not novel, its design is straightforward and follows a well known pattern. My scanner is a single Java class called, Scanner, with two methods, next() and peek().</p>
+        <p>next() consumes one token worth of the input string and returns the next token, this design is efficient because at no point do I store all of the tokens in memory, that is unnecessarily wasteful. The scanner's next() method is repeated called, as and when, the next token is required.</p>
+        <p>peek() is another important method, it's required by the parser to 'peek' ahead at what the next token will be without actually creating the token. To parse any non-regular language at least one token of lookahead is required, the peek method serves this purpose.</p>
+        <pre><code language="language-java">class Scanner {
+    public Token next() {
+        ...
+    }
+
+    public Token peek() {
+        ...
+    }
+}</code></pre>
+<div class="writeup-reference">
+    <p>The outline of my Lisp's Scanner class</p>
+</div>
+        <p>You can find the full code of my Scanner class on my GitHub here <a href="https://github.com/FrancisMcN/fsp/blob/main/src/main/java/ie/francis/lisp/scanner/Scanner.java" target="_blank">https://github.com/FrancisMcN/fsp/blob/main/src/main/java/ie/francis/lisp/scanner/Scanner.java</a></p>
+        <h3>What Is a Parser?</h3>
+        <p>A parser is the second stage of a compiler, it consumes the tokens produced by the scanner.</p>
+        <p>A parser consumes tokens and builds a parse tree by following the rules specified by the langauge's grammar. If a parse tree can be constructed successfully we know the original input string conforms to the grammar, if a parse tree cannot be constructed we know a syntax error has been detected.</p>
+        <p>One of the great properties of Lisp is the ease with which it can be parsed. As you might have noticed from my example code on the previous page, almost everything in Lisp is a list. Once we can parse that basic list structure we can basically parse any Lisp program.</p>
+        <h3>Designing the Grammar</h3>
+        <p>Every language has a grammar, both human languages and programming languages alike. There's a special meta-language for describing grammars called Extended Backus-Naur Form (EBNF), the grammar for my Lisp implementation is show below.</p>
+        <pre><code>program = expr*;
+expr = list | atom | "'" expr;
+list = "(" expr* ")";
+atom = &epsi; | SYMBOL | STRING | BOOLEAN | NUMBER;</code></pre>
+<div class="writeup-reference">
+    <p>The grammar my parser recognises in EBNF notation</p>
+</div>
+<p>Some explaining is in order. Every lowercase word in the EBNF grammar is called a non-terminal, non-terminals are defined on the left-hand side of the equals sign and become the symbols on the right-hand side during parsing.</p>
+<p>For example, in the above grammar an 'atom' can become a STRING, BOOLEAN, NUMBER, SYMBOL or the empty string. The uppercase words are called terminals, each terminal corresponds to one of the tokens produced by the scanner shown earlier.</p>
+<h3>A Parsing Example</h3>
+<p>Let's again look back to the earlier example string and watch the rules the parser will invoke to parse it.</p>
+<pre><code>(+ 100 200 300)</code></pre>
+<div class="writeup-reference">
+    <p>Original input string before parsing</p>
+</div>
+<p>Starting with the first token, the opening parenthese, by calling scanner.peek(). The parser begins with its first rule, the 'program' non-terminal and tries to consume the input tokens until there are no tokens remaining.</p>
+<p>The 'program' rule, in English, says 'a program is zero or more exprs'.</p>
+<p>'expr' is another non-terminal so the parser moves to the expr rule, the token under consideration remains the opening parenthese. The token under consideration won't change until it's been matched with a terminal symbol.</p>
+<p>The 'expr' rule, in English, says 'an expr is either a list or an atom or a single-quote followed by an expr'.</p>
+<p>The parser will try each rule in order, the parser will therefore begin with the 'list' non-terminal.</p>
+<p>A 'list' rule, in English, says 'a list is an opening parenthese followed by zero or more exprs followed by a closing parenthese'. </p>
+<p>Finally, the parser has found a terminal, better still, the terminal matches the token under consideration. The token is therefore consumed by calling scanner.next().</p>
+<pre><code>+ 100 200 300)</code></pre>
+<div class="writeup-reference">
+    <p>Input string after consuming the first opening parenthese</p>
+</div>
+<p>Now, the token under consideration is the '+' symbol and the rule the parser matches is 'expr' because expr* comes after "(" in the 'list' rule.</p>
+<p>The parser goes back to the expr rule, again seeing an expr is a list or an atom or a single-quote followed by another expr. The parser again tries to use the 'list' rule however this time it finds the token under consideration doesn't match the first terminal in the 'list' rule. The '+' symbol doesn't match '('.</p>
+<p>Therefore the parser can't continue, so it backtracks. It backs out of the expr rule, goes back up to the list rule and tries the next non-terminal which in this case the 'atom' rule.</p>
+<p>An atom, in English, is either the empty string, a SYMBOL token, a STRING token, a BOOLEAN token or a NUMBER token.</p>
+<p>Again, the parser tries each rule in order and eventually finds the token under consideration which is the '+' symbol matches the SYMBOL token in the atom rule.</p>
+<p>The parser consumes the '+' symbol by calling scanner.next(), jumps out of the atom rule and then out of the expr rule.</p>
+<pre><code>100 200 300)</code></pre>
+<div class="writeup-reference">
+    <p>The input string after consuming the '+' symbol</p>
+</div>
+<p>Something interesting happens next, the parser is still parsing the original 'list' rule. It has parsed "(" and 'expr*', the parser doesn't move onto ")" yet though.</p>
+<p>The star after expr means match zero or more occurrences, the parser therefore enters the expr rule again. The parser will only stop re-entering the expr rule whenever the token under consideration isn't a valid 'expr' or whenever the parser runs out of input.</p>
+<p>The parser finds the next three tokens are all valid exprs and consumes them (because an expr can be an atom which can be a NUMBER token). The input string is now shown below.</p>
+<pre><code>)</code></pre>
+<div class="writeup-reference">
+    <p>The input string after consuming the remaining numbers</p>
+</div>
+<p>The parser now returns to the original 'list' rule and finds only one terminal needs to be matched. As luck would have it, the token under consideration is now the closing parenthese which is the remaining terminal the parser wanted to find.</p>
+<p>The list rule has been successfully parsed, the parser backtracks again back to the original expr rule and from there backtracks again to the original 'program' rule. The program rule has been parsed successfully and the entire input has been consumed, therefore parsing was successful.</p>
+<h3>The Design of My Parser</h3>
+<p>I implemented a simple recursive descent parser by hand, it's common to use table-driven machine generated parsers but recursive descent parsers are easy to write and I didn't want to be tied to an external tool to build my code.</p>
+<p>Recursive descent parsers are effective and easy to write, they aren't powerful enough to recognise all languages but they're more than sufficient to parse Lisp.</p>
+<p>A recursive descent parser can be written by repeatedly applying some simple rules.</p>
+<ol>
+    <li>Each non-terminal is a method in the parser.</li>
+    <li>Match zero or more, expr* for example, becomes a while loop.</li>
+    <li>Match one or more becomes a do-while loop.</li>
+    <li>Match zero or one becomes an if-statement.</li>
+</ol>
+<p>That's all there is to it. I've included an incomplete snippet of Java code for an example Lisp parser below.</p>
+<pre><code language="language-java">class Parser {
+    public Object parse() {
+        return program();
+    }
+    private Object program() {
+        ...
+    }
+
+    private Object expr() {
+        ...
+    }
+
+    private Object list() {
+        scanner.next(); // Consume first "("
+        List&lt;Object&gt; exprs = new ArrayList&lt;&gt;();
+        while (isExpr(scanner.peek())) {
+            exprs.add(expr());
+        }
+        scanner.next(); // Consume last ")"
+        return exprs;
+    }
+    private Object atom() {
+        switch (scanner.peek().type()) {
+            case SYMBOL:
+                return new Symbol(scanner.next().value());
+            ...
+            default:
+                throw new SyntaxErrorException("found a syntax error!");
+        }
+    }
+}</code></pre>
+<div class="writeup-reference">
+    <p>A recursive descent parser can be written by following a few simple rules</p>
+</div>
+<p>You can find the full code of my Parser class on my GitHub here <a href="https://github.com/FrancisMcN/fsp/blob/main/src/main/java/ie/francis/lisp/parser/Parser.java" target="_blank">https://github.com/FrancisMcN/fsp/blob/main/src/main/java/ie/francis/lisp/parser/Parser.java</a></p>
+<!-- <p>The ultimate goal of a parser, besides detecting syntax errors, is to construct a parse tree. Most parsers produce a data structure called a parse tree which is eventually transformed into machine instructions. Lisp is unusual because Lisp code itself is its own parse tree, it's the reason Lisp code can modify itself so easily.</p> -->
+<h3>Code Generation</h3>
+<p>Once parsing is complete and a parse tree has been generated it's time to start generating machine code. The 'machine' my compiler targets doesn't exist in the physical world, it's a virtual machine called the Java Virtual Machine.</p>
 		</div>
         <script src="../js/script.js"></script>
         <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
