@@ -1,0 +1,184 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Assembler in Java - Francis McNamee</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/lisp-demo.css">
+    </head>
+    <body>
+        <div class="iframe-container" data-iframe-size>
+            <h1 class="text-center demo-title">ARM64 Assembler in Java</h1>
+            <hr>
+            <p class="text-center"><a href="/projects/assembler-writeup.html">Click here to find out how I made this project</a></p>
+            <h2>Introduction</h2>
+            <p>My assembler ...</p>
+		<h2>Example Code</h2>
+		<div class="codeBlock">
+            <span>The first step in learning any programming language is printing 'Hello World' to the screen. Here's how to do it in my version of Lisp.</span>
+            <div class="playground">
+                <form>
+                    <textarea placeholder="Type your code here ..." class="code" rows="17"/>; example assembly code
+.global _main, hello
+_main:
+        mov x1, 10
+        mov x2, x1
+xyz:
+        mov x3, 2000
+        mov x4, x3
+        mov x5, 50
+hello:
+        mov x6, 100
+        mov x7, 200
+abc:
+        mov x0, x7     ; exit code
+        mov x16, 1     ; syscall number for exit
+world:
+        svc 0x80       ; do the syscall</textarea>
+                    <div class="align-right">
+                        <div class="button">
+                            <input type="submit" class="run" value="Run code" />
+                            <img class="loading" src="../images/loading2.gif">
+                        </div>
+                    </div>
+                </form>
+                <div class="macho">
+                    
+                </div>
+            </div>
+		</div>
+        <p>Thank you for reading about my Assembler implementation, I hope you enjoyed playing with the example code. If you would like to learn more please <a href="/projects/assembler-writeup.html">read my writeup here</a>.</p>
+        <p>You can find all of the source code for my Assembler implementation on my GitHub here <a href="https://github.com/FrancisMcN/assembler" target="_blank">https://github.com/FrancisMcN/assembler</a></p>
+        </div>
+        <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
+		<script type="text/javascript">
+
+        function decodeCpuType(cpuType) {
+                switch (cpuType) {
+                    case 16777228:
+                        return "CPU_TYPE_ARM64";
+                    default:
+                        return "UNKNOWN";
+                }
+            }
+
+            function decodeCpuSubType(cpuSubType) {
+                switch (cpuSubType) {
+                    case 0:
+                        return "CPU_SUBTYPE_ARM64_ALL";
+                    default:
+                        return "UNKNOWN";
+                }
+            }
+
+            function decodeFileType(fileType) {
+                switch (fileType) {
+                    case 0:
+                        return "MH_EXECUTE";
+                    case 1:
+                        return "MH_OBJECT";
+                    default:
+                        return "UNKNOWN";
+                }
+            }
+
+            function decodeMachoJSON(json) {
+                let result = document.getElementsByClassName("macho")[0];
+                console.log(json)
+                result.innerHTML = `
+                <div class="machoHeader">
+                        <table>
+                            <tr>
+                                <th>Description</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td>CPU Type</td>
+                                <td>${decodeCpuType(json.header.cpuType)}</td>
+                            </tr>
+                            <tr>
+                                <td>CPU SubType</td>
+                                <td>${decodeCpuSubType(json.header.cpuSubType)}</td>
+                            </tr>
+                            <tr>
+                                <td>File Type</td>
+                                <td>${decodeFileType(json.header.fileType)}</td>
+                            </tr>
+                            <tr>
+                                <td>Load Command Count</td>
+                                <td>${json.header.loadCommandCount}</td>
+                            </tr>
+                        </table>
+                        ${json.loadCommands.map(command => {
+                            return "<div><strong>"+ command.name +"</strong></div>";
+                        }).join("\n")}
+                        <p>Strings</p>
+                        ${json.stringTable.strings.map(string => {
+                            return "<div>"+ string +"</div>";
+                        }).join("\n")}
+                    </div>
+                    `;
+            }
+
+
+            let playgrounds = document.getElementsByClassName("playground");
+            for (let playground of playgrounds) {
+                let form = playground.getElementsByTagName("form")[0];
+                // Find submit button to run the code
+                let button = form.getElementsByClassName("run")[0];
+                // Find the loading image
+                let loading = form.getElementsByClassName("loading")[0];
+                // Find the run button for the playground
+                let code = form.getElementsByClassName("code")[0];
+                // Find the result div for the playground
+                let result = playground.getElementsByClassName("macho")[0];
+                code.onkeyup = function (event) {
+                    code.rows = code.value.split("\n").length;
+                }
+                button.onclick = function(event) {
+                    event.preventDefault();
+                    button.disabled = true;
+                    button.value = "";
+                    loading.style.display = "block";
+                    fetch(`https://playground.francismcnamee.com/run`, {
+					method: "post",
+					body: JSON.stringify({ type: "assembler", code: code.value}),
+					headers: {
+					    "Content-Type": "application/json",
+  					},
+				})
+				.then(function(response) {
+					if (!response.ok) {
+						return Promise.reject(response)
+					}
+						return response.json();
+				})
+				.then(function(data) {
+					result.style.display = "inline-block";
+                    button.disabled = false;
+                    button.value = "Run code";
+                    loading.style.display = "none";
+                    decodeMachoJSON(JSON.parse(data.msg));
+					// if (Object.hasOwn(data, 'msg')) {
+					// 	result.getElementsByTagName("pre")[0].innerText = data.msg;
+					// }
+				})
+				.catch(function(error) {
+                    console.log(error)
+					return error.json()
+						.then(function(error) {
+                            button.disabled = false;
+                            button.value = "Run code";
+                            loading.style.display = "none";
+							result.style.display = "inline-block";
+							result.getElementsByTagName("pre")[0].innerText = `${error.error}`;
+						})
+				})
+                };
+
+            }
+		</script>
+    </body>
+</html>
