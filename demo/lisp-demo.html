@@ -316,9 +316,9 @@
                     button.disabled = true;
                     button.value = "";
                     loading.style.display = "block";
-                    fetch(`https://fsp-playground.francismcnamee.com/run`, {
+                    fetch(`https://playground.francismcnamee.com/run`, {
 					method: "post",
-					body: JSON.stringify({ code: code.value}),
+					body: JSON.stringify({ type: "fsp", code: code.value}),
 					headers: {
 					    "Content-Type": "application/json",
   					},
