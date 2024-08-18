@@ -236,6 +236,8 @@ input[type="text"]:focus {
     border-bottom: 1px solid #CCC;
 }
 
+p > code.hljs { display: inline; }
+
 .content {
     width: 90%;
     margin: 0 5%;
