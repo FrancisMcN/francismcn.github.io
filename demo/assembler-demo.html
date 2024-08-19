@@ -83,44 +83,160 @@ world:
                 }
             }
 
-            function decodeMachoJSON(json) {
-                let result = document.getElementsByClassName("macho")[0];
-                console.log(json)
-                result.innerHTML = `
-                <div class="machoHeader">
-                        <table>
-                            <tr>
-                                <th>Description</th>
-                                <th>Value</th>
-                            </tr>
-                            <tr>
-                                <td>CPU Type</td>
-                                <td>${decodeCpuType(json.header.cpuType)}</td>
-                            </tr>
-                            <tr>
-                                <td>CPU SubType</td>
-                                <td>${decodeCpuSubType(json.header.cpuSubType)}</td>
-                            </tr>
-                            <tr>
-                                <td>File Type</td>
-                                <td>${decodeFileType(json.header.fileType)}</td>
-                            </tr>
-                            <tr>
-                                <td>Load Command Count</td>
-                                <td>${json.header.loadCommandCount}</td>
-                            </tr>
-                        </table>
-                        ${json.loadCommands.map(command => {
-                            return "<div><strong>"+ command.name +"</strong></div>";
-                        }).join("\n")}
-                        <p>Strings</p>
-                        ${json.stringTable.strings.map(string => {
-                            return "<div>"+ string +"</div>";
-                        }).join("\n")}
-                    </div>
-                    `;
+            function toHexString(byteArray, byteclass) {
+                let str = "";
+                for (let i = 0; i < byteArray.length; i += 4) {
+                    str += `<div class=\"byte\ ${byteclass}bytes" style="background-color: rgb(246 246 246);" onclick="showDetail('${byteclass}')">`;
+                    for (let j = i; j < i + 4 && (j < byteArray.length); j++) {
+                        str += ('0' + (byteArray[j] & 0xFF).toString(16)).slice(-2);
+                    }
+                    str += "</div>";
+                }
+                return str;
             }
 
+            function decodeMachoJSON(json) {
+                let result = document.getElementsByClassName("macho")[0];
+                let loadCommandsSize = json.repr.header.loadCommandsSize;
+                
+                let sectionsSize = 0;
+                let stringsSize = 0;
+                for (let command of json.repr.loadCommands) {
+                    if (command.hasOwnProperty("name")) {
+                        sectionsSize = command["vmSize"];
+                    }
+                    if (command.hasOwnProperty("strsize")) {
+                        stringsSize = command["strsize"];
+                    }
+                }
+
+                let loadCommandsOffset = 32;
+                let sectionsOffset = loadCommandsOffset + loadCommandsSize;
+                let stringsOffset = sectionsOffset + sectionsSize;
+                let symbolsOffset = stringsOffset + stringsSize;
+
+                result.innerHTML = `
+                    <div class="bytes">
+                    ${toHexString(json.bytes.slice(0, 32), "header")}
+                    <div id="headerdetail" class="sectionDetail">
+                        <h3>The MachO Header</h3>
+                        <p>The Macho0 header is 32 bytes in length. It</p>
+                    </div>
+                    ${toHexString(json.bytes.slice(loadCommandsOffset, sectionsOffset), "loadcommand")}
+                    <div id="loadcommanddetail" class="sectionDetail">
+                        <ul>
+                            <li>Hello World 1 2 3</li>    
+                            <li>Hello World 4 5 6</li>    
+                        </ul>
+                    </div>
+                    ${toHexString(json.bytes.slice(sectionsOffset, stringsOffset), "segment")}
+                    <div id="segmentdetail" class="sectionDetail">
+                        <ul>
+                            <li>Hello World 1 2 3</li>    
+                            <li>Hello World 4 5 6</li>    
+                        </ul>
+                    </div>
+                    ${toHexString(json.bytes.slice(stringsOffset, symbolsOffset), "stringtable")}
+                    <div id="stringtabledetail" class="sectionDetail">
+                        <ul>
+                            <li>Hello World 1 2 3</li>    
+                            <li>Hello World 4 5 6</li>    
+                        </ul>
+                    </div>
+                    ${toHexString(json.bytes.slice(symbolsOffset), "symboltable")}
+                    <div id="symboltabledetail" class="sectionDetail">
+                        <ul>
+                            <li>Hello World 1 2 3</li>    
+                            <li>Hello World 4 5 6</li>    
+                        </ul>
+                    </div>
+                    </div>
+                `;
+                // result.innerHTML = `
+                // <div class="machoHeader">
+                //         <table>
+                //             <tr>
+                //                 <th>Description</th>
+                //                 <th>Value</th>
+                //             </tr>
+                //             <tr>
+                //                 <td>CPU Type</td>
+                //                 <td>${decodeCpuType(json.repr.header.cpuType)}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td>CPU SubType</td>
+                //                 <td>${decodeCpuSubType(json.repr.header.cpuSubType)}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td>File Type</td>
+                //                 <td>${decodeFileType(json.repr.header.fileType)}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td>Load Command Count</td>
+                //                 <td>${json.repr.header.loadCommandCount}</td>
+                //             </tr>
+                //         </table>
+                //         ${json.repr.loadCommands.map(command => {
+                //             return "<div><strong>"+ command.name +"</strong></div>";
+                //         }).join("\n")}
+                //         <p>Strings</p>
+                //         ${json.repr.stringTable.strings.map(string => {
+                //             return "<div>"+ string +"</div>";
+                //         }).join("\n")}
+                //     </div>
+                //     `;
+            }
+
+            let enabledEventListeners = {
+                headerbytes: true,
+                loadcommandbytes: true,
+                segmentbytes: true,
+                stringtablebytes: true,
+                symboltablebytes: true,
+            }
+
+            function showDetail(detail) {
+                let div = document.getElementById(`${detail}detail`);
+                if (div.style.display == "" || div.style.display == "none") {
+                    div.style.display = "block";
+                    enabledEventListeners[`${detail}bytes`] = false;
+                } else {
+                    div.style.display = "none";
+                    enabledEventListeners[`${detail}bytes`] = true;
+                }
+            }
+
+            function highlightBytes() {
+                let bytes = document.getElementsByClassName("byte");
+                for (let byte of bytes) {
+                    let colourClass = byte.classList[0];
+                    byte.addEventListener("mouseover", function() {
+                            
+                            let byteClass = byte.classList[1];
+                            let bytesSharingSameClass = document.getElementsByClassName(byteClass);
+                            if (enabledEventListeners[byteClass]) {
+                                for (let b of bytesSharingSameClass) {
+                                    b.style.backgroundColor = '';
+                                }
+                            }
+    
+                        })
+
+                        byte.addEventListener("mouseout", function() {
+                            
+                            let byteClass = byte.classList[1];
+                            let bytesSharingSameClass = document.getElementsByClassName(byteClass);
+    
+                            if (enabledEventListeners[byteClass]) {
+                                for (let b of bytesSharingSameClass) {
+                                    b.style.backgroundColor = 'rgb(246 246 246)';
+                                }
+                            }
+    
+                        })   
+                    
+                }
+            }
 
             let playgrounds = document.getElementsByClassName("playground");
             for (let playground of playgrounds) {
@@ -160,6 +276,7 @@ world:
                     button.value = "Run code";
                     loading.style.display = "none";
                     decodeMachoJSON(JSON.parse(data.msg));
+                    highlightBytes();
 					// if (Object.hasOwn(data, 'msg')) {
 					// 	result.getElementsByTagName("pre")[0].innerText = data.msg;
 					// }
@@ -172,7 +289,6 @@ world:
                             button.value = "Run code";
                             loading.style.display = "none";
 							result.style.display = "inline-block";
-							result.getElementsByTagName("pre")[0].innerText = `${error.error}`;
 						})
 				})
                 };
