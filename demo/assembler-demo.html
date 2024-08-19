@@ -195,6 +195,15 @@ world:
                 symboltablebytes: true,
             }
 
+            function enableEmbeddedEventListeners() {
+                enabledEventListeners.headerbytes = true
+                enabledEventListeners.loadcommandbytes = true
+                enabledEventListeners.segmentbytes = true
+                enabledEventListeners.stringtablebytes = true
+                enabledEventListeners.symboltablebytes = true
+
+            }
+
             function showDetail(detail) {
                 let div = document.getElementById(`${detail}detail`);
                 if (div.style.display == "" || div.style.display == "none") {
@@ -277,9 +286,7 @@ world:
                     loading.style.display = "none";
                     decodeMachoJSON(JSON.parse(data.msg));
                     highlightBytes();
-					// if (Object.hasOwn(data, 'msg')) {
-					// 	result.getElementsByTagName("pre")[0].innerText = data.msg;
-					// }
+					enableEmbeddedEventListeners();
 				})
 				.catch(function(error) {
                     console.log(error)
@@ -289,6 +296,7 @@ world:
                             button.value = "Run code";
                             loading.style.display = "none";
 							result.style.display = "inline-block";
+                            enableEmbeddedEventListeners();
 						})
 				})
                 };
