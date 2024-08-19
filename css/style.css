@@ -212,6 +212,14 @@ input[type="text"]:focus {
     width: 100%;
 }
 
+.sectionDetail {
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 10px;
+    background-color: #fcfcfc;
+}
+
 #iFrameForDemos {
     width: 100%;
     /* height: 100vh; */
@@ -243,18 +251,13 @@ input[type="text"]:focus {
     box-sizing: border-box;
     text-align: center;
     font-size: 0.8rem;
+    cursor: pointer;
 }
 
 .bytes {
     display: flex;
     flex-wrap: wrap;
 }
-
-/* .headerbytes, .loadcommandbytes, .segmentsbytes {
-    display: flex;
-    flex-wrap: wrap;
-    /* width: 100%; */
-/* } */
 
 .headerbytes {
     background-color: #bfe6ff;
