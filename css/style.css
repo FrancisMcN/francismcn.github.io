@@ -247,10 +247,10 @@ input[type="text"]:focus {
 .byte {
     padding: 0 10px;
     font-family: monospace;
-    width: 25%;
+    width: 33%;
     box-sizing: border-box;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 1rem;
     cursor: pointer;
 }
 

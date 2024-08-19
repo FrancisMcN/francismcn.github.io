@@ -116,40 +116,34 @@ world:
                 let symbolsOffset = stringsOffset + stringsSize;
 
                 result.innerHTML = `
+                    <h3>Assembler Output</h3>
+                    <p>Below is the assembled Mach-O object file for your code above. You can click on any of the bytes from the assembled output below, each section will highlight and expand with more detail about the Mach-O object format.</p>
                     <div class="bytes">
-                    ${toHexString(json.bytes.slice(0, 32), "header")}
                     <div id="headerdetail" class="sectionDetail">
-                        <h3>The MachO Header</h3>
-                        <p>The Macho0 header is 32 bytes in length. It</p>
+                        <h3>The Mach-O Header</h3>
+                        <p>The Macho-O header is 32 bytes in length. It specifies metadata about the object file such as whether it's 32 or 64 bit, whether it's an object file or an executable and its architecture such as x86 or ARM.</p>
+                    </div>
+                    ${toHexString(json.bytes.slice(0, 32), "header")}
+                    <div id="loadcommanddetail" class="sectionDetail">
+                        <h3>Load Commands</h3>
+                        <p>The load commands specify how data should be loaded into memory, they also specify some metadata such as the program entrypoint and the string table offset etc ...</p>
                     </div>
                     ${toHexString(json.bytes.slice(loadCommandsOffset, sectionsOffset), "loadcommand")}
-                    <div id="loadcommanddetail" class="sectionDetail">
-                        <ul>
-                            <li>Hello World 1 2 3</li>    
-                            <li>Hello World 4 5 6</li>    
-                        </ul>
+                    <div id="segmentdetail" class="sectionDetail">
+                        <h3>Sections</h3>
+                        <p>Sections contain the actual data that's loaded into memory by dyld, MacOS's dynamic linker. The program's instructions are stored in this part of the object file.</p>
                     </div>
                     ${toHexString(json.bytes.slice(sectionsOffset, stringsOffset), "segment")}
-                    <div id="segmentdetail" class="sectionDetail">
-                        <ul>
-                            <li>Hello World 1 2 3</li>    
-                            <li>Hello World 4 5 6</li>    
-                        </ul>
+                    <div id="stringtabledetail" class="sectionDetail">
+                        <h3>String Table</h3>
+                        <p>Every string present in the object file has an entry in the string table.</p>
                     </div>
                     ${toHexString(json.bytes.slice(stringsOffset, symbolsOffset), "stringtable")}
-                    <div id="stringtabledetail" class="sectionDetail">
-                        <ul>
-                            <li>Hello World 1 2 3</li>    
-                            <li>Hello World 4 5 6</li>    
-                        </ul>
+                    <div id="symboltabledetail" class="sectionDetail">
+                        <h3>Symbol Table</h3>
+                        <p>The symbol table specifies the symbols contained within the object file and whether they're local or global. One important symbol in particular is _main which specifies the entrypoint for the program. Each symbol has a pointer into the string table.</p>
                     </div>
                     ${toHexString(json.bytes.slice(symbolsOffset), "symboltable")}
-                    <div id="symboltabledetail" class="sectionDetail">
-                        <ul>
-                            <li>Hello World 1 2 3</li>    
-                            <li>Hello World 4 5 6</li>    
-                        </ul>
-                    </div>
                     </div>
                 `;
                 // result.innerHTML = `
@@ -215,35 +209,43 @@ world:
                 }
             }
 
+            function expandBytes(event) {
+                event.preventDefault();
+                showDetail("header")
+                showDetail("loadcommand")
+                showDetail("segment")
+                showDetail("stringtable")
+                showDetail("symboltable")
+                // toggleHighlightGroupOfBytes("headerbytes", true)()
+                // toggleHighlightGroupOfBytes("loadcommandbytes", true)()
+                // toggleHighlightGroupOfBytes("segmentbytes", true)()
+                // toggleHighlightGroupOfBytes("stringtablebytes", true)()
+                // toggleHighlightGroupOfBytes("symboltablebytes", true)()
+            }
+
+            function toggleHighlightGroupOfBytes(group, shouldHighlight) {
+                // console.log("calling function")
+                return function() {
+                    let bytesSharingSameClass = document.getElementsByClassName(group);
+                    if (enabledEventListeners[group]) {
+                        for (let b of bytesSharingSameClass) {
+                            console.log("should highlight?" + shouldHighlight)
+
+                            if (shouldHighlight) {
+                                b.style.backgroundColor = '';
+                            } else {
+                                b.style.backgroundColor = 'rgb(246 246 246)';
+                            }
+                        }
+                    }
+                }
+            }
+
             function highlightBytes() {
                 let bytes = document.getElementsByClassName("byte");
                 for (let byte of bytes) {
-                    let colourClass = byte.classList[0];
-                    byte.addEventListener("mouseover", function() {
-                            
-                            let byteClass = byte.classList[1];
-                            let bytesSharingSameClass = document.getElementsByClassName(byteClass);
-                            if (enabledEventListeners[byteClass]) {
-                                for (let b of bytesSharingSameClass) {
-                                    b.style.backgroundColor = '';
-                                }
-                            }
-    
-                        })
-
-                        byte.addEventListener("mouseout", function() {
-                            
-                            let byteClass = byte.classList[1];
-                            let bytesSharingSameClass = document.getElementsByClassName(byteClass);
-    
-                            if (enabledEventListeners[byteClass]) {
-                                for (let b of bytesSharingSameClass) {
-                                    b.style.backgroundColor = 'rgb(246 246 246)';
-                                }
-                            }
-    
-                        })   
-                    
+                    byte.addEventListener("mouseover", toggleHighlightGroupOfBytes(byte.classList[1], true))
+                    byte.addEventListener("mouseout", toggleHighlightGroupOfBytes(byte.classList[1], false))
                 }
             }
 
