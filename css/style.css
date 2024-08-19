@@ -236,7 +236,45 @@ input[type="text"]:focus {
     border-bottom: 1px solid #CCC;
 }
 
-p > code.hljs { display: inline; }
+.byte {
+    padding: 0 10px;
+    font-family: monospace;
+    width: 25%;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.bytes {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* .headerbytes, .loadcommandbytes, .segmentsbytes {
+    display: flex;
+    flex-wrap: wrap;
+    /* width: 100%; */
+/* } */
+
+.headerbytes {
+    background-color: #bfe6ff;
+}
+
+.loadcommandbytes {
+    background-color: #e0ffd0;
+}
+
+.segmentbytes {
+    background-color: #fffaa1;
+}
+
+.stringtablebytes {
+    background-color: #ffb5a1;
+}
+
+.symboltablebytes {
+    background-color: #ffa1e9;
+}
 
 .content {
     width: 90%;
@@ -293,6 +331,10 @@ p > code.hljs { display: inline; }
     .demo-title {
         font-size: 2em;
     }
+    .byte {
+        width: 12.5%;
+        font-size: 1rem;
+    }
 }
 
 /* Medium devices (desktops, 992px and up) */
@@ -313,6 +355,10 @@ p > code.hljs { display: inline; }
     .demo-title {
         font-size: 2em;
     }
+    .byte {
+        width: 12.5%;
+        font-size: 1rem;
+    }
 }
 
 /* Large devices (large desktops, 1200px and up) */
@@ -332,5 +378,9 @@ p > code.hljs { display: inline; }
     }
     .demo-title {
         font-size: 2em;
+    }
+    .byte {
+        width: 12.5%;
+        font-size: 1rem;
     }
 }

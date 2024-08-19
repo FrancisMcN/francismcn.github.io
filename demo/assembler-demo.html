@@ -83,42 +83,81 @@ world:
                 }
             }
 
+            function toHexString(byteArray, byteclass) {
+                let str = "";
+                for (let i = 0; i < byteArray.length; i += 4) {
+                    str += `<div class=\"byte\ ${byteclass}">`;
+                    for (let j = i; j < i + 4 && (j < byteArray.length); j++) {
+                        str += ('0' + (byteArray[j] & 0xFF).toString(16)).slice(-2);
+                    }
+                    str += "</div>";
+                }
+                return str;
+            }
+
             function decodeMachoJSON(json) {
                 let result = document.getElementsByClassName("macho")[0];
                 console.log(json)
+                let loadCommandsSize = json.repr.header.loadCommandsSize;
+                
+                let sectionsSize = 0;
+                let stringsSize = 0;
+                for (let command of json.repr.loadCommands) {
+                    if (command.hasOwnProperty("name")) {
+                        sectionsSize = command["vmSize"];
+                    }
+                    if (command.hasOwnProperty("strsize")) {
+                        stringsSize = command["strsize"];
+                    }
+                }
+
+                let loadCommandsOffset = 32;
+                let sectionsOffset = loadCommandsOffset + loadCommandsSize;
+                let stringsOffset = sectionsOffset + sectionsSize;
+                let symbolsOffset = stringsOffset + stringsSize;
+
                 result.innerHTML = `
-                <div class="machoHeader">
-                        <table>
-                            <tr>
-                                <th>Description</th>
-                                <th>Value</th>
-                            </tr>
-                            <tr>
-                                <td>CPU Type</td>
-                                <td>${decodeCpuType(json.header.cpuType)}</td>
-                            </tr>
-                            <tr>
-                                <td>CPU SubType</td>
-                                <td>${decodeCpuSubType(json.header.cpuSubType)}</td>
-                            </tr>
-                            <tr>
-                                <td>File Type</td>
-                                <td>${decodeFileType(json.header.fileType)}</td>
-                            </tr>
-                            <tr>
-                                <td>Load Command Count</td>
-                                <td>${json.header.loadCommandCount}</td>
-                            </tr>
-                        </table>
-                        ${json.loadCommands.map(command => {
-                            return "<div><strong>"+ command.name +"</strong></div>";
-                        }).join("\n")}
-                        <p>Strings</p>
-                        ${json.stringTable.strings.map(string => {
-                            return "<div>"+ string +"</div>";
-                        }).join("\n")}
+                    <div class="bytes">
+                    ${toHexString(json.bytes.slice(0, 32), "headerbytes")}
+                    ${toHexString(json.bytes.slice(loadCommandsOffset, sectionsOffset), "loadcommandbytes")}
+                    ${toHexString(json.bytes.slice(sectionsOffset, stringsOffset), "segmentbytes")}
+                    ${toHexString(json.bytes.slice(stringsOffset, symbolsOffset), "stringtablebytes")}
+                    ${toHexString(json.bytes.slice(symbolsOffset), "symboltablebytes")}
                     </div>
-                    `;
+                `;
+                // result.innerHTML = `
+                // <div class="machoHeader">
+                //         <table>
+                //             <tr>
+                //                 <th>Description</th>
+                //                 <th>Value</th>
+                //             </tr>
+                //             <tr>
+                //                 <td>CPU Type</td>
+                //                 <td>${decodeCpuType(json.repr.header.cpuType)}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td>CPU SubType</td>
+                //                 <td>${decodeCpuSubType(json.repr.header.cpuSubType)}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td>File Type</td>
+                //                 <td>${decodeFileType(json.repr.header.fileType)}</td>
+                //             </tr>
+                //             <tr>
+                //                 <td>Load Command Count</td>
+                //                 <td>${json.repr.header.loadCommandCount}</td>
+                //             </tr>
+                //         </table>
+                //         ${json.repr.loadCommands.map(command => {
+                //             return "<div><strong>"+ command.name +"</strong></div>";
+                //         }).join("\n")}
+                //         <p>Strings</p>
+                //         ${json.repr.stringTable.strings.map(string => {
+                //             return "<div>"+ string +"</div>";
+                //         }).join("\n")}
+                //     </div>
+                //     `;
             }
 
 
