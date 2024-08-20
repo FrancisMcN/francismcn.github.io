@@ -98,22 +98,22 @@ world:
             function decodeMachoJSON(json) {
                 let result = document.getElementsByClassName("macho")[0];
                 let loadCommandsSize = json.repr.header.loadCommandsSize;
-                
+
                 let sectionsSize = 0;
-                let stringsSize = 0;
+                let symbolsSize = 0;
                 for (let command of json.repr.loadCommands) {
                     if (command.hasOwnProperty("name")) {
                         sectionsSize = command["vmSize"];
                     }
-                    if (command.hasOwnProperty("strsize")) {
-                        stringsSize = command["strsize"];
+                    if (command.hasOwnProperty("numberOfSymbols")) {
+                        symbolsSize = command["numberOfSymbols"] * 16;
                     }
                 }
 
                 let loadCommandsOffset = 32;
                 let sectionsOffset = loadCommandsOffset + loadCommandsSize;
-                let stringsOffset = sectionsOffset + sectionsSize;
-                let symbolsOffset = stringsOffset + stringsSize;
+                let symbolsOffset = sectionsOffset + sectionsSize;
+                let stringsOffset = symbolsOffset + symbolsSize;
 
                 result.innerHTML = `
                     <h3>Assembler Output</h3>
@@ -134,15 +134,15 @@ world:
                         <h3>Sections</h3>
                         <p>Sections contain the actual data that's loaded into memory by dyld, MacOS's dynamic linker. The program's instructions are stored in this part of the object file.</p>
                     </div>
-                    ${toHexString(json.bytes.slice(stringsOffset, symbolsOffset), "stringtable")}
-                    <div id="stringtabledetail" class="sectionDetail">
-                        <h3>String Table</h3>
-                        <p>Every string present in the object file has an entry in the string table.</p>
-                    </div>
-                    ${toHexString(json.bytes.slice(symbolsOffset), "symboltable")}
+                    ${toHexString(json.bytes.slice(symbolsOffset, stringsOffset), "symboltable")}
                     <div id="symboltabledetail" class="sectionDetail">
                         <h3>Symbol Table</h3>
                         <p>The symbol table specifies the symbols contained within the object file and whether they're local or global. One important symbol in particular is _main which specifies the entrypoint for the program. Each symbol has a pointer into the string table.</p>
+                    </div>
+                    ${toHexString(json.bytes.slice(stringsOffset), "stringtable")}
+                    <div id="stringtabledetail" class="sectionDetail">
+                        <h3>String Table</h3>
+                        <p>Every string present in the object file has an entry in the string table.</p>
                     </div>
                     </div>
                 `;
@@ -229,7 +229,6 @@ world:
                     let bytesSharingSameClass = document.getElementsByClassName(group);
                     if (enabledEventListeners[group]) {
                         for (let b of bytesSharingSameClass) {
-                            console.log("should highlight?" + shouldHighlight)
 
                             if (shouldHighlight) {
                                 b.style.backgroundColor = '';
