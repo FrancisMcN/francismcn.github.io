@@ -129,7 +129,7 @@ world:
                         <h3>Load Commands</h3>
                         <p>The load commands specify how data should be loaded into memory, they also specify some metadata such as the program entrypoint and the string table offset etc ...</p>
                     </div>
-                    ${toHexString(json.bytes.slice(sectionsOffset, stringsOffset), "segment")}
+                    ${toHexString(json.bytes.slice(sectionsOffset, symbolsOffset), "segment")}
                     <div id="segmentdetail" class="sectionDetail">
                         <h3>Sections</h3>
                         <p>Sections contain the actual data that's loaded into memory by dyld, MacOS's dynamic linker. The program's instructions are stored in this part of the object file.</p>
