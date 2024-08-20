@@ -111,6 +111,16 @@ input[type="text"]:focus {
     outline: none;
 }
 
+table, th, td {
+    border: 1px solid #a0a0a0;
+    text-align: center;
+    padding: 2px 5px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
 .text-center {
     text-align: center;
 }
