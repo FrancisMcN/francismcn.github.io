@@ -83,6 +83,21 @@ world:
                 }
             }
 
+            // A bit of a hack but good enough for determining the correct 
+            // load command for the purposes of the demo
+            function determineLoadCommandName(loadCommand) {
+                if (loadCommand.hasOwnProperty("name")) {
+                    return "SEGMENT64"
+                } else if (loadCommand.hasOwnProperty("minos")) {
+                    return "BUILD_VERSION"
+                } else if (loadCommand.hasOwnProperty("symbolOffset")) {
+                    return "SYMTAB"
+                } else if (loadCommand.hasOwnProperty("indexToLocalSymbols")) {
+                    return "DYSYMTAB"
+                }
+                return "UNKNOWN";
+            }
+
             function toHexString(byteArray, byteclass) {
                 let str = "";
                 for (let i = 0; i < byteArray.length; i += 4) {
@@ -114,35 +129,94 @@ world:
                 let sectionsOffset = loadCommandsOffset + loadCommandsSize;
                 let symbolsOffset = sectionsOffset + sectionsSize;
                 let stringsOffset = symbolsOffset + symbolsSize;
-
                 result.innerHTML = `
                     <h3>Assembler Output</h3>
-                    <p>Below is the assembled Mach-O object file for your code above. You can click on any of the bytes from the assembled output below, each section will highlight and expand with more detail about the Mach-O object format.</p>
+                    <p>Mach-O is the object file format used by Apple products including MacOS, iOS, iPadOS, watchOS and visionOS. My assembler generates Mach object files, when you clicked 'Run code' above my assembler generated a real Mach object file which is displayed below.</p>
+                    <p>You can click on any of the bytes from the assembled output below, each section will highlight and expand with more detail about the Mach object format.</p>
+                    <p><strong>A note on endianness</strong> - my assembler produced the object file below in little-endian byte order because this is the native byte order used on x86 and ARM systems.</p>
                     <div class="bytes">
                     ${toHexString(json.bytes.slice(0, 32), "header")}
                     <div id="headerdetail" class="sectionDetail">
                         <h3>The Mach-O Header</h3>
-                        <p>The Macho-O header is 32 bytes in length. It specifies metadata about the object file such as whether it's 32 or 64 bit, whether it's an object file or an executable and its architecture such as x86 or ARM.</p>
+                        <p>The Mach-O header is 32 bytes in length, it begins a sequence of magic bytes which in the case of a 64 bit object file are 0xfeedfacf or 0xcffaedfe when using the little-endian byte order. The header also specifies metadata about the object file such as whether it's an object file or an executable and its architecture such as x86 or ARM.</p>
+                        <p>Below is a table which shows the decoded Mach-O header highlighted in blue.</p>
+                        <p>
+                            <table>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Value</th>
+                                </tr>
+                                <tr>
+                                    <td>CPU Type</td>
+                                    <td>${decodeCpuType(json.repr.header.cpuType)}</td>
+                                </tr>
+                                <tr>
+                                    <td>CPU SubType</td>
+                                    <td>${decodeCpuSubType(json.repr.header.cpuSubType)}</td>
+                                </tr>
+                                <tr>
+                                    <td>File Type</td>
+                                    <td>${decodeFileType(json.repr.header.fileType)}</td>
+                                </tr>
+                                <tr>
+                                    <td>Load Command Count</td>
+                                    <td>${json.repr.header.loadCommandCount}</td>
+                                </tr>
+                            </table>
+                        </p>
                     </div>
                     ${toHexString(json.bytes.slice(loadCommandsOffset, sectionsOffset), "loadcommand")}
                     <div id="loadcommanddetail" class="sectionDetail">
                         <h3>Load Commands</h3>
                         <p>The load commands specify how data should be loaded into memory, they also specify some metadata such as the program entrypoint and the string table offset etc ...</p>
+                        <p>The raw bytes representing the load commands are highlighted in green, you'll find the name of each load command in the table below.</p>
+                        <p>
+                            <table>
+                                <tr>
+                                    <th>Load Command Name</th>
+                                </tr>
+                                ${json.repr.loadCommands.map(command => {
+                                    return `
+                                    <tr>
+                                        <td>${determineLoadCommandName(command)}</td>
+                                    </tr>
+                                    `;
+                                }).join("\n")}
+                            </table>
+                        </p>
                     </div>
                     ${toHexString(json.bytes.slice(sectionsOffset, symbolsOffset), "segment")}
                     <div id="segmentdetail" class="sectionDetail">
                         <h3>Sections</h3>
                         <p>Sections contain the actual data that's loaded into memory by dyld, MacOS's dynamic linker. The program's instructions are stored in this part of the object file.</p>
+                        <p>Each ARM64 instruction is 32 bits wide, try adding some extra instructions to the assembly code above, if you then click 'Run code' you'll notice the number of bytes in this yellow section will increase. Each column of bytes is one assembled instruction from the code above.</p>
                     </div>
                     ${toHexString(json.bytes.slice(symbolsOffset, stringsOffset), "symboltable")}
                     <div id="symboltabledetail" class="sectionDetail">
                         <h3>Symbol Table</h3>
-                        <p>The symbol table specifies the symbols contained within the object file and whether they're local or global. One important symbol in particular is _main which specifies the entrypoint for the program. Each symbol has a pointer into the string table.</p>
+                        <p>The symbol table specifies the symbols contained within the object file, such the names of functions alongside information for the linker such as whether a symbol is local to the object file, global or defined externally. One important symbol in particular is _main which specifies the entrypoint for the program. Each symbol has a pointer into the string table.</p>
+                        <p>Each symbol in a 64 bit Mach-O file is 16 bytes wide, the symbol table size is therefore 16 * number of symbols.</p>
                     </div>
                     ${toHexString(json.bytes.slice(stringsOffset), "stringtable")}
                     <div id="stringtabledetail" class="sectionDetail">
                         <h3>String Table</h3>
-                        <p>Every string present in the object file has an entry in the string table.</p>
+                        <p>Every string present in the object file has an entry in the string table. Each string in the string table begins with a null character and continues until the next null character.</p>
+                        <p>The string table from the assembly code above is displayed below. Try adding some new labels to the assembly code above to watch the string table grow.</p>
+                        <p>There are currently <strong>${json.repr.stringTable.strings.length}</strong> strings in the string table.</p>
+                        <p>
+                            <table>
+                                <tr>
+                                    <th>String Table</th>
+                                </tr>
+                                ${json.repr.stringTable.strings.map(str => {
+                                    return `
+                                    <tr>
+                                        <td>${str}</td>
+                                    </tr>
+                                    `;
+                                }).join("\n")}
+                            </table>
+                        </p>
                     </div>
                     </div>
                 `;
