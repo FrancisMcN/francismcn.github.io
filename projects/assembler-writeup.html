@@ -20,6 +20,52 @@
             <hr>
             <p class="text-center"><a href="/demo/assembler-demo.html">Click here to go back to the demo</a></p>
             <h2>Project Highlights</h2>
+            <ul>
+                <li>Everything was written by me from scratch</li>
+                <li>Learned about Apple's Mach-O format <a href="/pdf/Mach-O_File_Format.pdf" target="_blank">here's the reference I used</a></li>
+                <li>Learned how to write ARM64 Assembly</li>
+            </ul>
+            <h2>How It Works</h2>
+            <p>My assembler takes text representing ARM64 instructions, labels and several assembler directives and produces a Mach object file which can be passed to a linker to generate a working executable.</p>
+            <p>The first stage of my assembler closely resembles that of my Lisp compiler <a href="/#lisp-demo" target="_blank">which you can read about here</a>.</p>
+            <p>The most interesting part of my assembler is the code for assembling instructions and for generating Mach-O files.</p>
+            <h3>Assembling ARM64 Instructions</h3>
+            <p>ARM64 instructions have a fixed width 32 bits meaning the instruction and its operands are all encoded inside 32 bits.</p>
+            <p>The architecture of my assembler actually makes implementing new instructions easy, each instruction is its own Java class implementing an interface called 'Instruction'.</p>
+            <pre><code language="language-java">public interface Instruction {
+    byte[] compile();
+}</code></pre>
+<div class="writeup-reference">
+    <p>The Instruction interface</p>
+</div>
+<p>The Instruction interface is simple, it contains a single method called compile() which returns the compiled/assembled instruction. Shown below is the implementation of the compile() method for the 'svc' instruction, 'svc' stands for 'Supervisor Call' and is used to execute system calls on ARM64.</p>
+<p>The implementation allocates a byte array of 4 bytes and initialises the bits integer with the bit pattern representing the 'svc' instruction. I use bit-shifting to add the instruction operand.</p>
+<pre><code language="language-java">@Override
+public byte[] compile() {
+    ByteBuffer bb = ByteBuffer.allocate(4);
+    bb.order(ByteOrder.LITTLE_ENDIAN);
+    // 11010100_000xxxxx_xxxxxxxx_xxx00001
+    int bits = 0b11010100_00000000_00000000_00000001;
+    bits |= (param << 5);
+    bb.putInt(bits);
+    return bb.array();
+}</code></pre>
+<div class="writeup-reference">
+    <p>Implementation of 'compile' for the 'svc' instruction</p>
+</div>
+<p>All ARM64 instructions are 32 bits wide, for efficiency the compile() method should really be returning 32-bit integers rather than byte arrays. I decided to return byte arrays because I intend to support x86 instructions in the future and x86 instruction sizes are not fixed, x86 instructions can be up to 15 bytes in length.</p>
+<p>One nice consequence of having one class per instruction means each class's toString() method can be used to print the instruction in its disassembled textual form.</p>
+<pre><code language="language-java">@Override
+public String toString() {
+    return String.format("svc %d", param);
+}</code></pre>
+<div class="writeup-reference">
+    <p>toString() implementation for the SvcInstruction class</p>
+</div>
+
+            <!-- <p>Assemblers translate text written by humans into instructions which are understood by a computer, the primary difference between assemblers and compilers is that compilers translate a much higher-level language than assemblers. Compilers translate concepts such as if-statements, functions and loops into machine instructions, usually each instruction in Assembly language becomes one machine instruction.</p> -->
+            <!-- <p>Assemblers are normally built into compilers but they can be separate programs, their job is to generate the actual bit-patterns that will be executed on a computer.</p> -->
         </div>
+        <script src="../js/iframe-resizer/iframe-resizer.child.js"></script>
     </body>
 </html>

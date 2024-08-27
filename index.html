@@ -24,17 +24,17 @@
 				<div class="project-square">
 					<h1>Lisp Compiler written in Java</h1>
 					<p>Generates JVM Bytecode using ASM</p>
-					<a href="/demo/lisp-demo.html" class="demo-link">Click here for a demo</a>
+					<a href="/demo/lisp-demo.html" data-hash="lisp-demo" class="demo-link">Click here for a demo</a>
 				</div>
 				<div class="project-square">
 					<h1>IP Geolocation API written in Go</h1>
 					<p>Generates MMDB files entirely from scratch</p>
-					<a href="/demo/geolocation-api-demo.html" class="demo-link">Click here for a demo</a>
+					<a href="/demo/geolocation-api-demo.html" data-hash="geolocation-api-demo" class="demo-link">Click here for a demo</a>
 				</div>
 				<div class="project-square">
 					<h1>ARM64 Assembler written in Java</h1>
 					<p>Generates Mach-O Object files from scratch</p>
-					<a href="/demo/assembler-demo.html" class="demo-link">Click here for a demo</a>
+					<a href="/demo/assembler-demo.html" data-hash="assembler-demo" class="demo-link">Click here for a demo</a>
 				</div>
 			</div>
 			<!-- <ul>
@@ -97,6 +97,17 @@
 				waitForLoad: true,
 			}, '#iFrameForDemos' );
 
+			function showDemoIfHashInUrl() {
+				var demoLinks = document.getElementsByClassName("demo-link");
+				for (let link of demoLinks) {
+					if (location.hash == '#' + link.dataset.hash) {
+						link.click();
+					}
+				}
+			}
+
+			window.onhashchange = showDemoIfHashInUrl;
+
 			// Get the modal
 			var modal = document.getElementById("demo");
 
@@ -129,6 +140,8 @@
 					document.getElementsByTagName("body")[0].style.overflow = "auto";
 				}
 			}
+
+			showDemoIfHashInUrl()
 		}
 			
 		</script>
