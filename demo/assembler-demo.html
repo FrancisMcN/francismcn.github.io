@@ -14,7 +14,10 @@
             <hr>
             <p class="text-center"><a href="/projects/assembler-writeup.html">Click here to find out how I made this project</a></p>
             <h2>Introduction</h2>
-            <p>My assembler ...</p>
+            <p>I find assemblers really interesting because they convert human-readable text into the actual bit patterns undersood by the processor. Assembly is a direct one-for-one translation from text to instructions, each instruction in the assembly code becomes a single instruction that's passed to the processor.</p>
+            <p>I wrote every part of my Assembler from scratch, from the parser to the code generator. Doing everything from scratch required me to learn Apple's Mach object format and implement Java code to parse and generate Mach object files. I also learned how to write ARM64 assembly.</p>
+            <p>Below you can run my own handwritten Assembler. It's written in Java and it currently targets the Mach object format and the ARM64 processor architecture. My long-term goal for this project is to target more formats and architectures such as the Linux ELF format, Windows PE format and the x86 processor architecture too.</p>
+            <p>Click 'Run code' below to send the example assembly code to my server where my assembler will be called and the resulting object file will be returned. The different sections of the object file are colour coded when you wave your mouse over them. Click on any byte in the output for more information about its section of the object file.</p>
 		<h2>Example Code</h2>
 		<div class="codeBlock">
             <div class="playground">
