@@ -1,0 +1,15 @@
+.inactive 
+{
+	background-color: transparent;
+  border: solid;
+  border-width: 1px;
+}
+
+/* Style the active class (and buttons on mouse-over) */
+.active, .btn:hover {
+  background-color: #81DAF5;
+  border: solid;
+  border-width: 1px;
+  
+  
+}
